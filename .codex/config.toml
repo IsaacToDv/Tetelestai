@@ -1,0 +1,28 @@
+# Perfiles del repositorio; no configura MCP ni credenciales.
+[agents]
+max_threads = 6
+max_depth = 1
+
+[agents.game_designer]
+description = "Especificación técnica del diseño y las reglas decididas por el autor."
+config_file = "agents/game_designer.toml"
+
+[agents.graphic_programmer]
+description = "Programación de gráficos PlayCanvas e integración visual aprobada."
+config_file = "agents/graphic_programmer.toml"
+
+[agents.physics_programmer]
+description = "Control, colisiones y simulación de reglas aprobadas."
+config_file = "agents/physics_programmer.toml"
+
+[agents.artist]
+description = "Dirección visual propuesta y assets aprobados."
+config_file = "agents/artist.toml"
+
+[agents.technical_programmer]
+description = "Arquitectura, red, voz, tooling y seguridad del alcance aprobado."
+config_file = "agents/technical_programmer.toml"
+
+[agents.bibliotecario]
+description = "Investigación web bíblica y técnica para todos los roles."
+config_file = "agents/bibliotecario.toml"

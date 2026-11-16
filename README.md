@@ -5,11 +5,13 @@ Aventura bíblica multijugador low-poly, respetuosa y entretenida, donde cada ma
 - Diseño: `docs/GDD.md`
 - Cómo trabaja el enjambre de Codex: `AGENTS.md`
 - Puesta en marcha (local o solo con GitHub): `SETUP.md`
-- `Plan.md` y `Sprints.md` los rellena Codex en el Sprint 0, con tu validación.
+- Estado y decisiones: `Plan.md` y `Sprints.md`; Sprint 0 de revisión en curso para la campaña «Dios crea».
 
 Las referencias a otros juegos orientan sus mecánicas y apariencia. La diversión proviene de explorar, descubrir y superar retos juntos; no se busca un juego de risa. Objetivo: web móvil y escritorio, 4–8 jugadores, público de 13 años en adelante.
 
-## Desarrollo del corte de Génesis
+## Desarrollo del corte técnico histórico de Génesis
+
+El código actual corresponde a Abram/Lot y se conserva para posible reutilización. La campaña comenzará en el Edén, en tercera persona; sus parámetros de guion, narrativa y juego los decide siempre el autor. El diseñador realiza la especificación técnica de lo aprobado. La nueva campaña aún no está implementada.
 
 Requiere Node.js 22.18 o posterior. Desde `game/`, instala con `npm ci`. Ejecuta `npm run server` en una terminal y `npm run dev` en otra. Usa dos sesiones de navegador para crear una sala privada y compartir su código. El prototipo tiene exactamente dos participantes; el objetivo del producto sigue siendo 4–8.
 
