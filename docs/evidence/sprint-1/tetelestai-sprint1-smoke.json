@@ -1,0 +1,33 @@
+{
+  "errors": [],
+  "checks": [
+    "two private roles; microphone never auto-requested",
+    "keyboard and captured mobile touch movement; shared fragment with two consents",
+    "proximity chat; opt-in fake microphone; offer/answer signaling; mute/block and track cleanup (RTP evidence is in audio field)",
+    "wrong-answer retry; result; retry; disconnect cancellation; rejoin with fragment retained; 45s timeout/answer; both conclude; leave/create"
+  ],
+  "audio": [
+    {
+      "bytes": 0,
+      "energy": 0,
+      "volume": 0.9908333333333332,
+      "paused": false,
+      "state": "new",
+      "local": "offer",
+      "remote": "answer",
+      "hostCandidates": 0
+    },
+    {
+      "bytes": 0,
+      "energy": 0,
+      "volume": 0.9908333333333332,
+      "paused": false,
+      "state": "new",
+      "local": "answer",
+      "remote": "offer",
+      "hostCandidates": 0
+    }
+  ],
+  "audioLimitation": "No RTP verification: managed Chromium WebRtcIPHandling=disable_non_proxied_udp; zero native host candidates. SDP signaling and fake microphone tracks tested.",
+  "result": "Tu secuencia llegó primero. Recibes una ficha de agua."
+}

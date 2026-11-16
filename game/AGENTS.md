@@ -3,9 +3,15 @@
 Adaptado de `playcanvas/engine` AGENTS.md (MIT) y del enfoque delgado de `playcanvas/developer-site`. Originales completos en `docs/references/` (no se cargan solos).
 Aquí el Engine es una **dependencia**, no el código que mantenemos: se omiten las reglas internas del motor (build, tree shaking, deprecaciones, PR).
 
-## Proyecto (completar en Sprint 1)
-- Stack: PlayCanvas Engine + Vite, lenguaje y versión de Node según `Plan.md`.
-- Comandos reales: `dev`, `build`, `lint`, `test`, `typecheck` → anótalos aquí al crearlos.
+## Proyecto (corte vertical de Sprint 1)
+- Stack: PlayCanvas Engine 2.24.1 + Vite 8.3.8, JavaScript ES Modules; Node >=22.18.0 (verificado con 24.22.1).
+- Desde `game/`: `npm ci --ignore-scripts`, `npm run server` (terminal 1), `npm run dev` (terminal 2), `npm run build`, `npm run preview`. Node/ws escucha por defecto en `127.0.0.1:3001`; `HOST`/`PORT` son opcionales. Si la caché del usuario no es escribible, usar `npm --cache /tmp/tetelestai-npm-cache ci --ignore-scripts`.
+- Build para Pages: `VITE_BASE=/Tetelestai/ npm run build`; preview con la misma variable y ruta `/Tetelestai/`.
+- Scripts reales: `npm run lint` (ESLint), `npm run typecheck` (checkJs estricto/JSDoc sin emitir TS), `npm test` (Node nativo: motor de sala, integración ws y voz). Las herramientas y ws fueron autorizados V4; el lenguaje sigue siendo JavaScript.
+- Campamento multijugador privado de dos: servidor autoritativo en `server/room.js` y `server/server.js`; cliente en `src/net`, `src/voice` y `src/core`. `createApp` devuelve `setState()` y `destroy()` idempotente. La solución del reto vive solo en servidor; cada snapshot contiene únicamente el rol propio.
+- Cliente configura servidor con `VITE_SERVER_URL` (por defecto hostname local, ws/wss, puerto3001). Sin STUN/TURN externo; micrófono opt-in apagado. Permisos/red/políticas pueden impedir voz; mantener chat alternativo. Proximidad no equivale a confidencialidad contra un cliente modificado.
+- Humo reutilizable opcional: `node scripts/browser-smoke.cjs`, con Playwright global y `/usr/bin/chromium` existentes (no dependencia npm). `SMOKE_URL`/`CHROMIUM_PATH` son opcionales. Escritorio1365×900, viewport móvil390×844 y entrada táctil CDP. `ALLOW_NO_ICE=1` registra explícitamente el límite del Chromium administrado (cero candidatos por política `disable_non_proxied_udp`); no afirma verificar RTP/audio audible. Véase `docs/design/implementation-report.md`. No demuestra FPS ni hardware móvil físico.
+- Build avisa de chunk del motor >500 kB (~2.09 MB, gzip ~535 kB); revisar presupuesto al fijar rendimiento, sin ocultar la advertencia.
 - GitHub Pages: `vite.config` lee `base: process.env.VITE_BASE ?? '/'`, la salida es `dist/` y `package-lock.json` va commiteado. El CI y el despliegue (`.github/workflows/`) esperan los scripts `lint`, `typecheck`, `test` y `build`.
 
 ## Código
