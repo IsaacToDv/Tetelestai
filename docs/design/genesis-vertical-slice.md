@@ -1,4 +1,6 @@
-# Genesis vertical slice — Sprint 1 proposal
+# Genesis vertical slice — Sprint 1 technical prototype
+
+> Registro del prototipo implementado. El autor corrigió después la dirección: la campaña comienza por los segmentos de Génesis en orden de indubiblia, no por Abram/Lot. Este diseño conserva valor como prueba técnica; no autoriza trasladar su narrativa o mecánicas al inicio de la campaña. Consultar al autor antes de cualquier nueva adaptación.
 
 Estado: **APROBADO por el autor para Sprint 1 (V1/V2/V3/V5)**. Se autoriza implementar la propuesta sin copiar versículos. No contiene citas textuales RVR1909. Base: `docs/GDD.md`, `Plan.md` y `docs/library/Libros/Genesis.md`.
 

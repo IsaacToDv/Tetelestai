@@ -14,6 +14,9 @@ Aquí el Engine es una **dependencia**, no el código que mantenemos: se omiten 
 - Build avisa de chunk del motor >500 kB (~2.09 MB, gzip ~535 kB); revisar presupuesto al fijar rendimiento, sin ocultar la advertencia.
 - GitHub Pages: `vite.config` lee `base: process.env.VITE_BASE ?? '/'`, la salida es `dist/` y `package-lock.json` va commiteado. El CI y el despliegue (`.github/workflows/`) esperan los scripts `lint`, `typecheck`, `test` y `build`.
 
+## Aprobación de contenido y reglas
+Antes de definir o modificar narrativa, historia o mecánicas, consulta al autor mediante el orquestador y espera su respuesta explícita. Incluye cambios de lógica que alteren reglas, progresión, retos o recompensas. El prototipo Abram/Lot no fija el comienzo de la campaña. Las reparaciones técnicas que mantienen comportamiento aprobado pueden avanzar; duda de diseño va al orquestador, investigación técnica al bibliotecario.
+
 ## Código
 - ES Modules. Sin `var`: usa `const` o `let`. Evita `any`; tipa con precisión.
 - Nombres: clases PascalCase, funciones camelCase, constantes UPPER_SNAKE_CASE, archivos kebab-case (el archivo se llama como su clase principal).

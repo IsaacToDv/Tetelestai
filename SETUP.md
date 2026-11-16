@@ -27,20 +27,17 @@ Requisitos: Codex CLI o app, Node.js 22.18+, `uv` (para Serena), Git, Chrome est
 
 Si `create-playcanvas` genera su propio `AGENTS.md` dentro de `game/`, fusiónalo con el de este zip (conserva sus comandos reales).
 
-## 3. Qué viene configurado
-- `.codex/config.toml`: subagentes activos (6 hilos, profundidad 1), Context7 y Serena compartidos, PlayCanvas Editor MCP **desactivado**.
-- `.codex/agents/*.toml`: los 5 subagentes. El orquestador es la sesión principal (AGENTS.md).
-- Firecrawl vive solo en el bibliotecario; Tripo y Chrome DevTools, solo en los agentes que los necesitan, para no gastar tokens de esquema en el orquestador.
-- PlayCanvas Editor MCP: actívalo (`enabled = true`) solo si trabajas con un proyecto del Editor; ábrelo y conéctalo al puerto 52000. Un solo servidor por Editor.
+## 3. Perfiles del repositorio
+- `.codex/config.toml` registra seis roles con profundidad máxima 1 y seis hilos: bibliotecario, game_designer, graphic_programmer, physics_programmer, artist y technical_programmer. El orquestador es la sesión principal.
+- `.codex/agents/*.toml` contiene instrucciones reutilizables. No fija modelos ni instala/configura servidores MCP, credenciales o herramientas. Cada sesión debe comprobar qué capacidades tiene realmente.
+- Bibliotecario investiga segmentos bíblicos y técnicas web para los roles; el orquestador valida con el autor narrativa, historia y mecánicas antes de implementar. Los dossiers quedan en `docs/library/technical/`.
+- Si la sesión no carga perfiles o no tiene subagentes, el orquestador adopta cada rol por turnos leyendo sus `developer_instructions` y lo comunica. No afirmes herramientas disponibles por estar mencionadas en documentación.
 
-## 3b. Modelos
-Configurados: sesión principal `gpt-6.1-sol`; `technical_programmer` Sol high; `physics_programmer`, `graphic_programmer`, `game_designer` Sol medium; `bibliotecario` `gpt-6-luna`. Para el Sprint 0 cambia con `/model gpt-6-astra` (según tu plan). Terra (`gpt-6.1-terra`) requiere Codex CLI 0.159.0+. Comprueba los nombres en `/model`; si alguno no existe en tu cuenta, edita la línea `model` del TOML.
-
-## 4. Verificar
-`codex mcp list` y `/mcp` en la sesión. Si un subagente no ve Context7 o Serena, copia sus bloques `[mcp_servers.*]` a su TOML.
+## 4. Verificar perfiles
+`python -c "import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path('.codex').rglob('*.toml')]"` comprueba sintaxis TOML si Python >=3.11 está instalado. Esto no demuestra que el cliente cargue los roles. Revisa las capacidades de tu versión de Codex; `codex mcp list` y `/mcp` aplican solo si esa sesión ofrece esos comandos. No hace falta activar MCP para leer los dossiers guardados.
 
 ## 5. Primer prompt
-> Lee AGENTS.md, Plan.md y Sprints.md. Están vacíos: ejecuta el Sprint 0. Usa el bibliotecario para indexar Génesis en indubiblia.org y comprobar la documentación de PlayCanvas, luego hazme todas las preguntas de validación en una sola ronda.
+> Lee AGENTS.md, Plan.md y Sprints.md. Si están vacíos, ejecuta Sprint 0; si ya tienen decisiones, respétalas. Delega al bibliotecario verificar los segmentos de Génesis en orden según indubiblia y el dossier técnico necesario. Consulta en una sola ronda las decisiones nuevas de narrativa, historia y mecánicas; espera mi aprobación antes de implementarlas.
 
 ## Costos y avisos
 - Firecrawl y Tripo consumen créditos. Todo gasto pasa por V4.

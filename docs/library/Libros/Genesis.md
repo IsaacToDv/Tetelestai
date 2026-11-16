@@ -8,3 +8,6 @@ Estado del contenido para el juego: **PENDIENTE_VALIDACION (V1/V2)**. Consulta: 
 - Candidato a fragmento: promesa en Génesis 12:1–3 y su relación con Gálatas 3:16, señalada en la sección «Promesa» del estudio. **PENDIENTE_VALIDACION**; comprobar contexto, interpretación y encaje narrativo antes de convertirlo en contenido. [Fuente: página de Estudio]
 
 El sitio declara derechos reservados. Se conservan referencias y resúmenes, no copias. Seleccionar RVR1909 no autoriza a reproducir los comentarios ni otras traducciones presentes en indubiblia. [Fuente: pie de las páginas consultadas]
+
+## Corrección de ruta del autor
+La progresión debe comenzar por los segmentos de Génesis en orden, no por Abram/Lot. Índice fuente verificado en `../Segmentos/Genesis.md`: primer segmento, «Dios crea», Gn 1:1–2:25. El candidato del Sprint 0 queda como antecedente de investigación; no establece el inicio de la historia. Cualquier adaptación narrativa o mecánica sigue requiriendo consulta y aprobación del autor.

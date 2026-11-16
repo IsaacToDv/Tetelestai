@@ -11,6 +11,9 @@ Resúmenes con fuente, no copias. Cada dato: `[Fuente: URL]` o `[Inferencia]`. C
 | `Arqueologia/` | hallazgos y contexto material | Arqueología |
 | `PreguntasLibro/` | preguntas del libro (para trivias/retos) | Preguntas |
 | `Segmentos/` | divisiones narrativas del libro | Segmentos |
+| `technical/` | investigaciones de técnicas por tarea y rol; plantilla, versiones, fuentes y medición | documentación oficial del motor y plataformas |
 | `ReferenciasCruzadas/` | candidatos a Fragmentos AT→NT | (compilado por el bibliotecario) |
 
 Regla: solo se investiga el libro y las secciones del sprint en curso. Nombre de archivo: `Genesis.md`, `Abraham.md`, etc.
+
+Ruta de Génesis: consultar `Segmentos/Genesis.md`; el autor solicita los segmentos de indubiblia en orden. El bibliotecario investiga ese orden, pero no decide narrativa, historia ni mecánicas.

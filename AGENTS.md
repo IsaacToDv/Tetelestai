@@ -6,8 +6,8 @@ Habla con el usuario en **español**. Código, commits y nombres de archivo en i
 ## 1. Archivos vivos
 - `Plan.md` = visión, decisiones validadas, arquitectura, riesgos. `Sprints.md` = sprints.
 - Si alguno está vacío, ejecuta el **Sprint 0** (sección 4). Nunca inventes su contenido sin preguntar.
-- Léelos y analízalos al **inicio y al cierre de cada sprint** (qué cambió, qué se aprendió, qué falta). No los releas a mitad de sprint.
-- Solo el orquestador y el bibliotecario los editan. Los demás proponen cambios en su reporte.
+- Léelos y analízalos al **inicio y al cierre de cada sprint** (qué cambió, qué se aprendió, qué falta). Ante una corrección explícita del autor, consulta y actualiza las secciones afectadas en ese momento.
+- Solo el orquestador edita Plan.md y Sprints.md; el bibliotecario propone actualizaciones en su reporte. Los demás proponen cambios en su reporte.
 - Formato compacto de cada sprint en `Sprints.md`: `## Sprint N — título`, `Estado` (planificado | en curso | esperando validación | cerrado), `Objetivo`, tabla de tareas (id | dueño | criterio de aceptación | estado), `Validaciones pendientes`, `Resultado y lecciones`.
 
 ## 2. Equipo
@@ -16,10 +16,11 @@ Tú, la sesión principal, eres el **Orquestador PlayCanvas**: coordinas, integr
 | agente | dueño de |
 |---|---|
 | `game_designer` | `docs/design/**`, `game/data/**` (libros, roles, misiones, fragmentos, decisiones, retos, rúbrica de canon) |
-| `graphic_programmer` | `game/src/graphics/**`, `game/src/shaders/**`, assets visuales, cámara, iluminación, VFX, cinemática final |
+| `graphic_programmer` | `game/src/graphics/**`, `game/src/shaders/**`: render, cámara, iluminación, VFX e integración de arte aprobado |
+| `artist` | `docs/art/**`, `game/assets/**`: propuestas visuales, personajes, paletas y assets; sin generar ni gastar antes de V4/V5 |
 | `physics_programmer` | `game/src/physics/**`, controlador de personaje, colisiones, triggers de fragmentos, física de minijuegos |
 | `technical_programmer` | `game/src/net/**`, `game/src/voice/**`, `game/src/core/**`, build/lint/test, estado de partida, emparejamiento oculto, seguridad |
-| `bibliotecario` | `docs/library/**` (incl. `Fuentes.md`), bitácora de estado en `Sprints.md`; investiga en la web y da la fuente de lo que nadie sabe |
+| `bibliotecario` | `docs/library/**` (incl. `Fuentes.md`): segmentos bíblicos en orden y búsqueda web de técnicas para cada rol; entrega fuentes y límites, no decide diseño |
 
 Reglas:
 - Delega solo trabajo independiente con archivos disjuntos. Cada tarea lleva: objetivo, archivos permitidos, criterio de aceptación y límite de reporte.
@@ -27,6 +28,8 @@ Reglas:
 - Solo tú usas el MCP `playcanvas` del Editor (viene desactivado; un único servidor puede conectarse al Editor).
 
 ## 3. Preguntar siempre
+**Narrativa, historia y mecánicas: pregunta siempre al autor ANTES de escoger o implementar** episodios, orden jugable, personajes/roles, diálogos, misiones, fragmentos, retos, recompensas, progresión, reglas o cambios de comportamiento. Presenta propuestas concretas marcadas `PENDIENTE_VALIDACION`. Una fuente bíblica, una recomendación del bibliotecario, la aprobación de un stack o el OK de un sprint anterior no aprueban un diseño nuevo. Una reparación que cambie reglas también requiere consulta. La investigación y los arreglos técnicos que conserven las reglas aprobadas pueden avanzar.
+
 No adivines. Si falta información o hay dos caminos razonables, pregunta con 2-4 opciones y tu recomendación (herramienta de preguntas si existe; si no, lista numerada). Agrupa en una ronda (máx. 5) y avanza con lo que no depende de la respuesta.
 Nada pasa a "cerrado" sin OK explícito del usuario en estas puertas:
 - **V1 Contenido bíblico**: diálogos, fragmentos AT→NT, decisiones y canon, retos bíblicos, cinemática del evangelio.
@@ -38,12 +41,12 @@ Nada pasa a "cerrado" sin OK explícito del usuario en estas puertas:
 Contenido bíblico sin validar se marca `PENDIENTE_VALIDACION`. No copies texto bíblico al repo sin confirmar la licencia de la versión.
 
 ## 4. Sprint 0 (Plan.md o Sprints.md vacíos)
-1. Bibliotecario: índice mínimo de Génesis y verificación de versión/documentación de PlayCanvas.
+1. Bibliotecario: verificar los segmentos de Génesis y su orden real en indubiblia.org; documentar referencias y dudas, sin transformar segmentos en niveles por cuenta propia. Verificar también documentación/versiones técnicas.
 2. Una ronda de preguntas al usuario: versión bíblica y licencia; plataforma (web escritorio o móvil), jugadores por partida y público/edad; proyecto code-first (Engine + Vite, recomendado) o proyecto del Editor; TypeScript (recomendado) o JS; hosting y servicio de voz; representación de Dios/Jesús; tono narrativo; meta de rendimiento.
-3. Redacta `Plan.md` y `Sprints.md` (Sprint 1 = corte vertical de `docs/GDD.md`, "Ruta sugerida"). Preséntalos y espera V3.
+3. Consultar al autor la traducción jugable del primer segmento documentado, sin saltar a Abraham. Redactar Plan/Sprints con las decisiones explícitamente aprobadas y presentar V3. El prototipo Abram/Lot es una prueba técnica histórica, no el comienzo de la campaña.
 
 ## 5. Ciclo de sprint
-Leer Plan/Sprints → proponer objetivo → validar → bibliotecario (fuentes) → diseñador (spec) → programadores en paralelo → integrar (build, lint, pruebas, humo con `playwright-cli`) → reporte al usuario (≤15 líneas: hecho, evidencia, pendientes, validaciones) → cierre (actualizar Sprints.md y Plan.md).
+Leer Plan/Sprints → bibliotecario (segmentos y dossier técnico según tareas) → diseñador/artist (propuestas) → orquestador consulta narrativa/historia/mecánicas y valida V1–V6 → especificación aprobada → programadores con interfaces y archivos disjuntos → integrar (build, lint, pruebas, humo con `playwright-cli`) → reporte al usuario (≤15 líneas: hecho, evidencia, pendientes, validaciones) → cierre (actualizar Sprints.md y Plan.md).
 **Hecho** = compila, lint limpio, 0 errores en consola, captura de la funcionalidad y criterios de aceptación cumplidos.
 
 ## 6. Ahorro de tokens
@@ -56,20 +59,28 @@ Leer Plan/Sprints → proponer objetivo → validar → bibliotecario (fuentes) 
 - Prototipa con primitivas y low poly procedural; genera con Tripo solo tras V4/V5.
 - Máx. 1 línea en "Lecciones" por error repetido. Mantén este archivo delgado.
 
-## 7. Modelos
-- Sesión principal: `gpt-6.1-sol` medium. **Sprint 0 y arquitectura inicial** (`net`, `voice`, `core`): pide al usuario cambiar a `gpt-6-astra` medium con `/model` si su plan lo permite; al terminar, vuelve a Sol. Astra también para un cierre de sprint con bugs de integración difíciles.
-- Cada subagente trae su modelo en su TOML: `technical_programmer` Sol high; `physics_programmer`, `graphic_programmer` y `game_designer` Sol medium; `bibliotecario` `gpt-6-luna` medium.
-- Tareas para `gpt-6.1-terra` medium (revisar capturas, diálogos de NPC en volumen, fuentes contradictorias): lanza el subagente con ese modelo si tu herramienta de spawn permite sobrescribirlo; si no, usa su modelo por defecto. No bajes Terra a esfuerzo low para código.
-- Cambiar a un modelo más caro es decisión del usuario (V4).
+## 7. Modelos y capacidades
+- Los perfiles `.codex/agents/*.toml` heredan el modelo disponible de la sesión. Verifica disponibilidad antes de delegar y no escales a un modelo más caro sin decisión del autor (V4).
+- La configuración guardada no prueba que los perfiles, MCP o subagentes estén cargados. Si faltan, trabaja por turnos leyendo las instrucciones de cada rol y declara qué herramientas utilizaste realmente.
+- Máximo seis trabajadores concurrentes y profundidad 1 en la configuración local; el límite real de la sesión prevalece. Un especialista no crea su propio equipo.
 
-## 8. Código
+## 8. Apartado técnico del orquestador
+- Antes de asignar trabajo, define objetivo aprobado, rol, versiones instaladas, restricciones móvil/escritorio y duda técnica concreta. Encarga al bibliotecario un dossier en `docs/library/technical/`; no encargues una búsqueda genérica de "lo mejor".
+- Bibliotecario consulta la web y prioriza documentación oficial, tipos/API de la versión instalada y ejemplos mantenidos. Compara opciones por compatibilidad, costo, complejidad, accesibilidad, seguridad y rendimiento; separa hechos de recomendaciones. Registra URL, fecha, versión y método de comprobación en Fuentes.md.
+- Graphic: render, cámara, shaders, luz y perfiles GPU. Physics: control, colisiones, paso de simulación y sincronización. Designer: técnicas de diseño y accesibilidad para las reglas que el autor autorice. Artist: flujo low-poly, formatos, materiales y licencias de assets. Technical: red, voz, autoridad, pruebas y herramientas.
+- El orquestador revisa el dossier con el especialista, elige la solución técnica dentro del alcance aprobado y asigna archivos/interfaces/pruebas. Costos y dependencias nuevas pasan por V4; cambios de experiencia, narrativa o mecánicas se consultan siempre al autor.
+- Los especialistas consumen el resumen y sus fuentes; devuelven dudas al orquestador para que bibliotecario investigue, evitando búsquedas duplicadas. Si falta acceso web o la versión no es verificable, registrar el bloqueo, no inventar APIs.
+- Ningún hallazgo técnico sustituye una prueba: verificar con el entorno real y distinguir resultados medidos, inferidos, simulados y comunicados por el autor. No afirmar FPS físicos sin medición.
+- Sin subagentes, adoptar los roles por turnos leyendo sus instrucciones. Sin MCP, usar herramientas web/HTTPS disponibles con TLS; registrar limitaciones. No instalar servidores MCP ni servicios de pago por defecto.
+
+## 9. Código
 Antes de tocar `game/`, lee `game/AGENTS.md` (reglas PlayCanvas). Si usas Superpowers, guarda sus planes en `Plan.md` y `Sprints.md`; no crees archivos de plan paralelos.
 
-## 9. GitHub y nube (sin máquina local)
-- Flujo: issue (plantilla "Tarea de sprint") → comentar `@codex` → tarea en la nube → PR → CI (`.github/workflows/ci.yml`) → merge a `main` → despliegue automático a GitHub Pages.
+## 10. GitHub y nube (sin máquina local)
+- Flujo: issue (plantilla "Tarea de sprint") → comentar `@codex` → tarea en la nube → PR → CI (`.github/workflows/ci.yml`) → revisión para merge a `main`. El workflow actual verifica el juego; no despliega a Pages.
 - En la nube pueden faltar subagentes y MCP. Si faltan, trabaja por turnos adoptando cada rol (lee solo las `developer_instructions` de su TOML) y dilo en el reporte.
-- Una tarea en la nube no puede preguntar en vivo: si necesitas validación, no cambies lo no validado; escribe `## Preguntas para el usuario` (2-4 opciones y recomendación) en la descripción del PR y detente ahí.
-- Ramas `sprint-N/<tarea>`, commits convencionales, un PR por tarea con la plantilla; deja marcadas las V1-V6 pendientes.
+- Si hay herramienta de preguntas o chat interactivo, consolida allí las validaciones y continúa lo independiente. Si la tarea es asíncrona y no permite respuesta, registra `## Preguntas para el usuario` en el PR/reporte y bloquea solo el trabajo dependiente. No interpretes silencio como aprobación.
+- Ramas `sprint-N/<tarea>`, commits convencionales; conserva el estado real de V1–V6. El autor autorizó subir entregas de sprint al remoto y preparar copia local. No hacer merge ni despliegue sin autorización.
 - Pages solo sirve el cliente estático (`game/dist`). El servidor multijugador y de voz es decisión V4.
 - Nunca pongas secretos ni claves en el repo.
 
@@ -78,4 +89,4 @@ Antes de tocar `game/`, lee `game/AGENTS.md` (reglas PlayCanvas). Si usas Superp
 - Ignora el estilo salvo que rompa el lint.
 
 ## Lecciones
--
+- No usar un corte técnico aprobado como autorización para elegir el inicio de la campaña; consultar narrativa, historia y mecánicas antes de cada cambio.

@@ -66,3 +66,13 @@ Implementado el recorrido de dos participantes: salas por código, roles privado
 Evidencia: `docs/evidence/sprint-1/` contiene capturas escritorio/móvil/resultado y el informe de humo de producción. Lint y checkJs limpios, 17 pruebas automáticas, build para Pages y humo de dos sesiones correcto (crear/unir, fragmento, orden erróneo, resultado, repetir, desconexión, reentrada, timeout 45 s, concluir y salir). La señalización de voz se comprobó; **audio recibido/RTP no verificado** por política administrada Chromium sin UDP directo y cero candidatos, reproducido sin el producto. Las pruebas de voz simuladas verifican colas ICE, atenuación, bloqueo, permisos y limpieza, sin sustituir audio real.
 
 Pendientes de aceptación: prueba de audio en navegador local sin política restrictiva, rendimiento en móviles/escritorios físicos de referencia y OK del autor para cierre. Hosting público/TURN quedan fuera del alcance autorizado. Se entrega para prueba local; no declarar cerrado ni rendimiento alcanzado. El autor pidió subir la entrega a rama remota y pausar después, sin comenzar Sprint 2.
+
+
+### Revisión del autor después de prueba local
+El autor reporta que funciona bien en local, incluido el audio, y pide pulir la lógica. No aporta FPS/dispositivos concretos; conservar esa distinción respecto de las limitaciones de nube. Sprint 1 continúa esperando aceptación del conjunto, no se declara cerrado.
+
+Corrección vigente: Abram/Lot queda como prototipo técnico histórico, no comienzo de campaña. Seguir segmentos de Génesis en orden según indubiblia verificados por bibliotecario. Narrativa, historia y mecánicas requieren consulta al autor ANTES de diseño definitivo/implementación; no convertir la corrección de ruta en aprobación de nuevas escenas o reglas.
+
+Encargo actual: refactorizar instrucciones de orquestador y perfiles de agentes, añadir artist y establecer investigación técnica del bibliotecario para cada rol. No se modifica el juego ni comienza Sprint 2. Próxima decisión de contenido: presentar el índice verificado y consultar la adaptación del primer segmento cuando el autor retome ese trabajo.
+
+Refactorización de coordinación realizada: seis perfiles en `.codex/agents/`, incluyendo artist; orquestador con apartado técnico y bibliotecario con biblioteca técnica por tarea. Índice verificado de 18 segmentos guardado en `docs/library/Segmentos/Genesis.md` (primero Dios crea, Gn 1:1–2:25). No se implementó narrativa ni mecánica nueva. Próximo diseño del primer segmento requiere consulta previa al autor.

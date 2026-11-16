@@ -1,5 +1,7 @@
 # GDD — Tetelestai
 
+> Dirección vigente del autor: la historia comienza siguiendo los segmentos de Génesis en orden según indubiblia.org, no con Abraham. Bibliotecario verifica la secuencia; toda adaptación narrativa, histórica o mecánica se consulta al autor antes de implementarse. Abram/Lot se conserva como prototipo técnico. Las notas de episodios y mecánicas anteriores no son autorización general de nuevos contenidos.
+
 > Dirección actualizada por indicación del autor: aventura bíblica respetuosa y entretenida. Friendslop es una referencia visual y de mecánicas, no una intención cómica. La ruta general de Plan/Sprints fue aprobada en V3; los detalles nuevos de Sprint 1 requieren su validación; los contenidos bíblicos concretos están PENDIENTE_VALIDACION (V1/V2).
 
 ## 1. Idea del autor, con aclaración de tono
