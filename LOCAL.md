@@ -6,11 +6,21 @@
 4. En esa terminal ejecuta `npm run server`.
 5. Abre otra terminal en `game/` y ejecuta `npm run dev`. Abre la dirección que muestra Vite.
 6. Abre una segunda ventana o sesión privada del navegador. Crea una sala en la primera y utiliza su código en la segunda.
-7. Sigue las indicaciones del juego para reunir a ambos jugadores, activar el fragmento y completar el reto.
+7. Elijan un personaje distinto cada uno, Adán o Eva. Camina con WASD o las flechas y arrastra con el ratón para girar la cámara. En pantallas táctiles, usa las flechas en pantalla y arrastra sobre el jardín. «Volver al menú» libera tu personaje.
+
+La guía del jardín muestra la visita y el riego. Acércate a cada señal para que aparezca la acción. Pulsa E en el teclado o el botón que muestra el juego. El panel «Animales» muestra su crecimiento y permite editar los nombres si juegas como Adán.
+
+Quien cree el jardín puede copiar su **clave privada del jardín** del panel de sala. Para recuperarlo, usa «Reabrir mi jardín» y pega esa clave. Los nombres se conservan tras reiniciar el servidor mientras se conserve `game/.eden-data/`. El progreso de las actividades permanece mientras la sala está ocupada. Comparte el código de sala con tu amigo.
 
 Mantén ambas terminales abiertas. Detén los procesos con Ctrl+C al terminar. Puedes editar los archivos con tu editor habitual; Vite recarga el cliente durante el desarrollo.
 
-## Voz y navegador
+Para probar Edén desde un teléfono en la misma red Wi‑Fi, inicia el servidor con `HOST=192.168.1.23 npm run server`, sustituyendo la IP de ejemplo por la de tu equipo. Abre la dirección de red que imprime Vite tanto en el equipo como en el teléfono y usa el mismo código de sala.
+
+El panel «Voz y chat de proximidad» incluye chat, micrófono optativo, silencio y bloqueo. Para probar el micrófono en el mismo equipo usa `localhost`. Desde un teléfono en la red local, el navegador normalmente requiere HTTPS para conceder acceso al micrófono. El chat de texto está disponible por HTTP. [Contextos seguros de W3C](https://www.w3.org/TR/secure-contexts/#is-origin-trustworthy)
+
+## Prototipo Abram/Lot
+
+Abre `prototype.html` en el mismo servidor de Vite para probar la entrega histórica, con su propio código de sala, fragmento, reto y voz.
 
 La voz comienza apagada. Actívala solo si quieres conceder permiso al micrófono. Para dos sesiones en la misma habitación conviene usar auriculares y evitar realimentación. El chat de texto sirve como alternativa.
 

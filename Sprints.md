@@ -17,7 +17,7 @@ Objetivo: aclarar con el autor la base del prototipo de campaña y su flujo de e
 
 Validaciones pendientes: adaptación jugable del primer segmento, parámetros concretos y nueva ruta; proveedores/moderación pública, arte y condiciones de la fuente bíblica. Las ideas de rescate y «Puerta de salida» son PENDIENTE_VALIDACION, registradas en Plan.md. No se inicia implementación de campaña en esta actualización documental.
 
-Resultado y lecciones: el autor eligió entregas jugables pequeñas con disciplinas combinadas y validación antes de avanzar; sus ejemplos no autorizan reglas. El Sprint 0 anterior permanece cerrado y Sprint 1 conserva su estado histórico de aceptación pendiente.
+Resultado y lecciones: el autor eligió entregas jugables pequeñas con disciplinas combinadas y validación antes de avanzar; sus ejemplos no autorizan reglas. Aprobó la primera mitad de Sprint 1 en Edén y decidirá si se continúa después de probarla. El Sprint 0 anterior permanece cerrado y el corte histórico de Abram/Lot conserva su estado de aceptación pendiente.
 
 Revisión documental: no se eliminaron Markdown porque conservan instrucciones, fuentes, decisiones o evidencia distintas. Se corrigió la afirmación obsoleta de despliegue automático en SETUP.md. Se sincronizan también los perfiles y fuentes locales de la corrección anterior para que la revisión remota conserve su contexto; no se modifica código del juego ni se fusiona o despliega.
 
@@ -40,6 +40,37 @@ V3 aprobado por el autor. Validaciones pendientes para Sprint 1: V1/V2 para cont
 
 Resultado y lecciones: el autor confirmó RVR1909, web móvil/escritorio, 4–8 jugadores, 13+, Engine + Vite con JavaScript y Pages para el cliente. El juego busca diversión con respeto, sin enfoque de comedia. Consultar el remoto antes de concluir que faltan archivos recién subidos.
 
+## Sprint 1 — «Dios crea», primera mitad
+Estado: cerrado
+
+Objetivo: probar una primera exploración de Edén tras la creación de los personajes (Gn 2:7–25, dentro de Gn 1:1–2:25), en una sala privada para dos amigos.
+
+| id | dueño | criterio de aceptación | estado |
+|---|---|---|---|
+| S1E-01 | técnico | Crear y unirse por código; dos plazas; elección excluyente de Adán/Eva validada por servidor; salir al menú libera el personaje | implementado y verificado |
+| S1E-02 | gráfico + orquestador | Jardín low-poly con figuras provisionales vestidas; caminata libre con teclado/táctil; cámara tercera persona detrás del personaje con giro manual por ratón/arrastre táctil | implementado y verificado en escritorio y móvil emulado |
+| S1E-03 | orquestador | Lint, comprobación de tipos, pruebas, build y humo de dos sesiones sin errores de consola con captura | verificado |
+
+Validaciones pendientes: aceptación de la entrega por el autor. El autor ya pidió avanzar con la segunda mitad. Rendimiento físico pendiente de dispositivos de referencia.
+
+Resultado y lecciones: Edén abre en la raíz del cliente y el prototipo Abram/Lot queda en `prototype.html`. Pasaron lint, checkJs, 21 pruebas y el build bajo `/Tetelestai/`. El humo de producción en Chrome verificó entrada, selección, marcha sincronizada, giro con ratón y toque, salida y reelección con cero errores de consola. El build conserva el aviso de tamaño del motor. [Informe](docs/evidence/eden/tetelestai-eden-smoke.json) · [Escritorio](docs/evidence/eden/tetelestai-eden-desktop.png) · [Móvil emulado](docs/evidence/eden/tetelestai-eden-mobile.png)
+
+## Sprint 1 — «Dios crea», segunda mitad
+Estado: cerrado
+
+Objetivo: ampliar la exploración de Edén con las actividades solicitadas y comunicación privada durante el recorrido.
+
+| id | dueño | criterio de aceptación | estado |
+|---|---|---|---|
+| S1E-04 | técnico + gráfico + orquestador | Visita cooperativa guiada, estado compartido y aportes conservados mientras exista la sala | implementado y verificado |
+| S1E-05 | técnico + orquestador | Chat y voz por proximidad, micrófono optativo, silencio, bloqueo y limpieza | verificado en localhost con audio simulado en ambas direcciones |
+| S1E-06 | técnico + gráfico + orquestador | Dos brotes regables por cualquiera; tres alimentaciones por asno; monta/desmonta a velocidad de marcha; fruto que reaparece tras 30 s; nombres editables por Adán con recuperación tras reinicio | implementado y verificado |
+| S1E-07 | orquestador | Integrar las reglas aprobadas y verificar build, lint, pruebas, dos sesiones de navegador y capturas | verificado |
+
+Validaciones pendientes: rendimiento en dispositivos físicos y proveedores públicos. El autor autorizó el cierre y la integración en main.
+
+Resultado y lecciones: lint, checkJs, build para `/Tetelestai/` y 30 pruebas pasaron. El recorrido de ambas mitades pasó en dos sesiones de Chrome con Playwright, sin errores de consola. La prueba de servidor verificó el nombre editado desde una instancia nueva y el reloj controlado comprobó la reposición del fruto exactamente a los 30 s. Los nombres persisten en el directorio del servidor y las actividades viven en la sala activa. El build conserva el aviso de tamaño del motor. [Informe](docs/evidence/eden-garden/tetelestai-eden-garden-smoke.json) · [Escritorio](docs/evidence/eden-garden/tetelestai-eden-garden-desktop.png) · [Móvil emulado](docs/evidence/eden-garden/tetelestai-eden-garden-mobile.png)
+
 ## Sprint 1 — Corte vertical de Génesis (propuesta)
 Estado: esperando validación
 
@@ -51,9 +82,9 @@ Objetivo: demostrar el recorrido de encuentro, fragmento y reto en un escenario 
 | S1-02 | técnico + autor | Elegir servidor y voz, aprobar dependencias/costos V4 y definir controles de acceso/comunicación V6 | base local aprobada; público/TURN pendientes |
 | S1-03 | técnico | Preparar Engine + Vite JS y comandos de build/lint/check/test; configurar base de Pages | implementado y verificado |
 | S1-04 | físico + gráfico | Movimiento teclado/táctil y escenario low-poly revisable; objetivo de rendimiento y arte aprobados | implementado; FPS físico pendiente |
-| S1-05 | técnico | Sincronización autoritativa, roles ocultos y voz/chat por proximidad según servicios aprobados | implementado; RTP no verificado |
+| S1-05 | técnico | Sincronización autoritativa, roles ocultos y voz/chat por proximidad según servicios aprobados | implementado; RTP bidireccional verificado localmente con audio simulado |
 | S1-06 | diseñador + programadores | Integrar un fragmento y un reto 1 vs 1 aprobados en el recorrido | implementado y humo correcto |
-| S1-07 | orquestador | Build, lint, comprobaciones y pruebas pertinentes pasan; humo móvil/escritorio, consola limpia y evidencia visual; autor valida cierre | comprobaciones correctas con límite RTP; esperando aceptación |
+| S1-07 | orquestador | Build, lint, comprobaciones y pruebas pertinentes pasan; humo móvil/escritorio, consola limpia y evidencia visual; autor valida cierre | comprobaciones locales correctas; esperando aceptación |
 
 Validaciones pendientes: V1–V6 según tareas; meta de rendimiento/dispositivos. No instalar dependencias ni implementar hasta aprobar el alcance. No desplegar ni publicar sin autorización.
 
@@ -93,6 +124,8 @@ Pendientes de aceptación: prueba de audio en navegador local sin política rest
 
 ### Revisión del autor después de prueba local
 El autor reporta que funciona bien en local, incluido el audio, y pide pulir la lógica. No aporta FPS/dispositivos concretos; conservar esa distinción respecto de las limitaciones de nube. Sprint 1 continúa esperando aceptación del conjunto, no se declara cerrado.
+
+Verificación local del 2026-11-16 con Chrome 157, escritorio y viewport táctil emulado: recorrido completo en dos sesiones, cero errores de consola y RTP con energía de audio simulada en ambos sentidos. El humo comprueba el resultado en ambos clientes con un solo acierto. La ventana de empate de 250 ms se verifica con reloj controlado en las pruebas de sala. [Informe local](docs/evidence/sprint-1/tetelestai-sprint1-local-smoke.json).
 
 Corrección vigente: Abram/Lot queda como prototipo técnico histórico, no comienzo de campaña. Seguir segmentos de Génesis en orden según indubiblia verificados por bibliotecario. Narrativa, historia y mecánicas requieren consulta al autor ANTES de diseño definitivo/implementación; no convertir la corrección de ruta en aprobación de nuevas escenas o reglas.
 

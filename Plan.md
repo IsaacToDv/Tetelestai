@@ -1,12 +1,13 @@
 # Tetelestai — Plan
 
-Estado: Sprint 0 de revisión en curso (2026-11-16); campaña «Dios crea». Base técnica histórica conservada para posible reutilización. Las decisiones explícitas del autor se distinguen de las propuestas.
+Estado: ambas mitades de Sprint 1 de Edén implementadas y verificadas localmente (2026-11-16). El autor autorizó el cierre del sprint y su integración en main. Sprint 0 de revisión sigue abierto y se conserva el corte técnico Abram/Lot.
 
 ## Visión confirmada
 Aventura bíblica multijugador low-poly, respetuosa y entretenida. Cada mapa representa un libro de la Biblia. Las referencias a friendslop son visuales y mecánicas; no se busca comedia, caos como finalidad ni caricaturizar el relato. Exploración, misterio, encuentros, retos y descubrimientos sostienen la diversión. La dirección vigente está en `docs/GDD.md`.
 
 ## Revisión de Sprint 0 — decisiones del autor (2026-11-16)
 - Iniciar la campaña con «Dios crea» (Gn 1:1–2:25), explorando el Edén una vez creados los personajes. Conservar Abram/Lot para posible reutilización futura; no es la apertura ni una aprobación de roles para este tramo.
+- El autor aprobó Edén para la primera mitad de Sprint 1. Dos amigos entran a una sala privada por código y cada uno elige un personaje disponible, Adán o Eva. El tramo ofrece caminata libre con teclado o controles táctiles y salida al menú en cualquier momento. La cámara va detrás del personaje y gira manualmente con ratón o arrastre táctil. El jardín provisional usa suelo, hierba y árboles low-poly. Los personajes son figuras humanas vestidas y estilizadas, sin representar una escena bíblica (Gn 2:7–25).
 - Trabajar mediante entregas jugables pequeñas que combinan disciplinas; el autor valida cada entrega antes de avanzar. La secuencia concreta de nuevos sprints sigue por definir y aprobar; no se cierra Sprint 1.
 - Cámara inicial en tercera persona. Primera persona no forma parte del alcance inicial confirmado.
 - Experiencia deseada: menú de entrada y selección de personajes; sorteo entre amigos, elección manual y emparejamiento con desconocidos. Esta intención confirma las modalidades, no sus reglas de asignación, disponibilidad de roles, privacidad, acceso o moderación; V4/V6 para servicio público siguen pendientes.
@@ -20,6 +21,17 @@ Aventura bíblica multijugador low-poly, respetuosa y entretenida. Cada mapa rep
 
 ### Decisiones necesarias antes de implementar la campaña
 Personajes controlables y cantidad de participantes del primer tramo; inicio y cierre de la partida; primera tarea/oficio y guía; peligros y consecuencias; encuentro y reto; fragmentos y validación de referencias; reglas de las tres modalidades de selección/emparejamiento; seguridad y servicio para desconocidos; arte y dispositivos de rendimiento. El autor decide; las alternativas permanecen PENDIENTE_VALIDACION. El stack y otras decisiones anteriores se conservan como antecedentes vigentes salvo corrección expresa, sin atribuirles una revalidación global en esta ronda.
+
+### Segunda mitad de Sprint 1
+
+- **Aprobado.** Adán y Eva registran su visita a un punto de observación del jardín al acercarse y pulsar E o «Confirmar». La indicación inicial y una señal en el lugar orientan la actividad. Con dos aportes se muestra «Tarea completada» a ambos; los jugadores pueden seguir explorando o volver al menú. Los aportes se conservan mientras la sala siga ocupada. La visita es una adaptación jugable en el contexto de Gn 2:7–25.
+- **Aprobado.** Voz y chat por proximidad en salas privadas según el prototipo local: radio de 12 unidades, micrófono apagado al entrar y optativo, silencio y bloqueo. El autor pidió mejorar su uso. Se priorizan controles y estados claros, limpieza en las transiciones de sala y verificación bidireccional de audio. Siguen pendientes los proveedores públicos y TURN.
+- **Aprobado.** Una sola tarea de riego de dos brotes (Gn 2:15). Cualquiera puede regar uno o ambos. El jardín permanece abierto al completar las actividades.
+- **Aprobado.** Dos asnos jóvenes provisionales. Cualquiera puede alimentar cada asno tres veces para que crezca. Un jugador puede montar un asno adulto libre y desmontar con el mismo botón. La monta usa los controles, la velocidad y los límites de caminar. Asnos, alimentación y monta son adaptaciones jugables.
+- **Aprobado.** Cualquiera de los dos personajes puede comer un fruto genérico al acercarse al árbol. La fruta reaparece tras 30 segundos y se muestra una confirmación breve. Contexto: Gn 2:9, 16–17.
+- **Aprobado.** Solo Adán puede dar y editar nombres (Gn 2:19–20). Los nombres se guardan por jardín en el servidor y el creador puede reabrirlo con su clave privada incluso tras reiniciar el servidor. La clave privada y el código de invitación tienen propósitos distintos.
+
+Comprobación de lo aprobado: dos sesiones entran por código, completan una visita por personaje con teclado y toque y observan el mismo estado. Con una sesión todavía en sala, volver conserva el aporte. Tras completar, se puede caminar y regresar al menú. Probar entrega de chat y audio WebRTC simulado en ambos sentidos, salida del alcance, silencio, bloqueo y salida de sala. Usar consola y capturas de escritorio y móvil emulado.
 
 ## Decisiones del autor
 - Web móvil y escritorio; objetivo de producto: 4–8 jugadores, público 13+.
@@ -75,7 +87,7 @@ Corte local de dos participantes implementado; ver Sprints.md y docs/evidence/sp
 - El autor informa que audio y ejecución local funcionan bien; señala que falta pulir la lógica. Es validación cualitativa reportada, no medición de FPS ni cierre automático del sprint.
 - La campaña NO empieza con Abraham: seguirá los segmentos de Génesis en orden según indubiblia.org, verificados por el bibliotecario en `docs/library/Segmentos/Genesis.md`: 18 segmentos; primero «Dios crea» (Gn 1:1–2:25). El corte Abram/Lot se conserva como prueba técnica, no como apertura de la historia.
 - Consultar SIEMPRE al autor antes de definir o cambiar narrativa, historia o mecánicas, incluido cómo se convierte un segmento en experiencia jugable. La secuencia de la fuente no aprueba roles, objetivos, escenas, retos ni recompensas. Ningún detalle nuevo queda autorizado por el prototipo anterior.
-- El bibliotecario entrega el índice y las referencias; luego el diseñador prepara propuestas pendientes y el orquestador reúne las decisiones del autor antes de implementar. No se inicia aún la adaptación del primer segmento ni otro sprint.
+- El índice y las referencias preceden la validación del alcance. Las dos mitades de «Dios crea» se rigen por las decisiones del autor registradas en este Plan.
 
 ## Coordinación técnica del orquestador
 El orquestador define el problema aprobado y solicita al bibliotecario investigación web específica para cada rol (graphic, physics, designer, artist, technical). Los dossiers de `docs/library/technical/` comparan técnicas compatibles con las versiones instaladas, con fuentes primarias, costos, límites y pruebas propuestas. El especialista revisa la aplicabilidad, el orquestador coordina interfaces y validación; ninguna recomendación técnica autoriza cambios narrativos o mecánicos. Perfiles reutilizables en `.codex/agents/*.toml`; los modelos y MCP disponibles se verifican en cada sesión.

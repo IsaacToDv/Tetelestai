@@ -1,6 +1,7 @@
 /** @typedef {ReturnType<import('../../server/room.js').Room['snapshot']>} State */
+/** @typedef {ReturnType<import('../../server/eden-room.js').EdenRoom['snapshot']>} EdenState */
 /** @typedef {{type:'offer'|'answer',sdp:string}|{type:'ice',candidate:RTCIceCandidateInit}} Signal */
-/** @typedef {State|{type:'connected'|'left'|'communication-reset'}|{type:'error',message:string}|{type:'chat',text:string,own?:boolean}|{type:'answer',accepted:boolean,attempt:string,round:number}|{type:'signal',from:string,data:Signal}} ServerMessage */
+/** @typedef {State|EdenState|{type:'connected'|'left'|'communication-reset'}|{type:'error'|'eden-feedback',message:string}|{type:'eden-world-key',key:string}|{type:'chat',text:string,own?:boolean}|{type:'answer',accepted:boolean,attempt:string,round:number}|{type:'signal',from:string,data:Signal}} ServerMessage */
 
 export class Connection {
   /** @param {(message:ServerMessage)=>void} receive @param {(status:string)=>void} status */

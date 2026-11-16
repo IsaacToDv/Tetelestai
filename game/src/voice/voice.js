@@ -1,4 +1,5 @@
-/** @import {State, Signal} from '../net/connection.js' */
+/** @import {Signal} from '../net/connection.js' */
+/** @typedef {{self:string, communication:boolean, players:{id:string,x:number,z:number,voice:boolean}[]}} VoiceState */
 
 /** Opt-in local WebRTC, with no STUN/TURN service configured. */
 export class Voice {
@@ -7,7 +8,7 @@ export class Voice {
     this.send = send; this.status = status;
     /** @type {MediaStream|null} */ this.stream = null;
     /** @type {RTCPeerConnection|null} */ this.peer = null;
-    /** @type {State|null} */ this.state = null;
+    /** @type {VoiceState|null} */ this.state = null;
     /** @type {RTCIceCandidateInit[]} */ this.ice = [];
     this.other = ''; this.pending = false; this.muted = false; this.blocked = false;
     this.generation = 0; this.failedPeer = ''; this.destroyed = false;
@@ -17,6 +18,10 @@ export class Voice {
   async toggle() {
     if (this.stream) { this.stop(); this.status('Micrófono apagado.'); return; }
     if (this.pending || this.destroyed) return;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      this.status('El micrófono requiere HTTPS o localhost. Puedes usar el chat de texto.');
+      return;
+    }
     this.pending = true; const generation = this.generation;
     this.status('Esperando permiso para el micrófono…');
     try {
@@ -25,10 +30,10 @@ export class Voice {
       this.stream = stream; this.send({ type: 'voice', value: true });
       this.status('Micrófono activo. La voz solo se enlaza con ambos participantes cerca y con su micrófono activo.');
     } catch {
-      this.status('No se pudo activar el micrófono. Comprueba el permiso y usa el chat de texto.');
+      if (generation === this.generation && !this.destroyed) this.status('No se pudo activar el micrófono. Comprueba el permiso y usa el chat de texto.');
     } finally { this.pending = false; }
   }
-  /** @param {State} state */
+  /** @param {VoiceState} state */
   update(state) {
     this.state = state;
     const own = state.players.find((player) => player.id === state.self);
@@ -36,7 +41,10 @@ export class Voice {
     const distance = own && other ? Math.hypot(own.x - other.x, own.z - other.z) : 100;
     this.audio.volume = this.muted || this.blocked ? 0 : Math.max(0, 1 - distance / 12);
     const eligible = Boolean(this.stream && own?.voice && other?.voice && state.communication && !this.blocked);
-    if (!eligible || other?.id !== this.other) this.closePeer();
+    if (this.peer && (!eligible || other?.id !== this.other)) {
+      this.closePeer();
+      if (this.stream) this.status('Micrófono activo. Esperando al compañero dentro del alcance.');
+    }
     if (eligible && other && !this.peer && this.failedPeer !== other.id) {
       this.other = other.id;
       this.createPeer();
@@ -113,11 +121,14 @@ export class Voice {
     }
     this.other = ''; this.ice.length = 0; this.audio.pause(); this.audio.srcObject = null;
   }
-  stop() {
+  /** @param {boolean} [notify] */
+  stop(notify = true) {
     this.generation++; this.closePeer(); this.failedPeer = '';
     this.stream?.getTracks().forEach((track) => track.stop()); this.stream = null;
-    this.send({ type: 'voice', value: false });
+    if (notify) this.send({ type: 'voice', value: false });
   }
-  reset() { this.stop(); this.state = null; this.blocked = false; this.audio.muted = this.muted; }
-  destroy() { if (this.destroyed) return; this.destroyed = true; this.reset(); this.audio.remove(); }
+  /** @param {boolean} [notify] */
+  reset(notify = true) { this.stop(notify); this.state = null; this.blocked = false; this.audio.muted = this.muted; }
+  /** @param {boolean} [notify] */
+  destroy(notify = true) { if (this.destroyed) return; this.destroyed = true; this.reset(notify); this.audio.remove(); }
 }

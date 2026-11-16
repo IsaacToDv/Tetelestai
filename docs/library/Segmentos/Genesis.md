@@ -38,6 +38,18 @@ El título 13 dice «Jaco» en la fuente; se registra tal cual, sin atribuirle a
 
 ## Dirección del autor y validación
 
-El autor pide avanzar por estos segmentos en orden, comenzando por el número 1; el prototipo Abram/Lot no define el comienzo de la historia. Esta decisión ordena la investigación, pero no decide personajes controlables, escenas, diálogos, roles, objetivos, retos ni mecánicas. Todo diseño de esas piezas requiere preguntar al autor antes de implementarlo: **PENDIENTE_VALIDACION**.
+El autor pide avanzar por estos segmentos en orden, comenzando por el número 1. El prototipo Abram/Lot se conserva como prueba técnica. El autor valida por separado las escenas, los personajes y las reglas de la adaptación. Las decisiones de «Dios crea» se registran en [Plan.md](../../../Plan.md).
 
 [Inferencia] Es posible preparar fuentes del segmento 1 sin decidir cómo jugarlo. La fuente es un índice de estudio, no un diseño de videojuego. No tratar los 18 segmentos automáticamente como 18 mapas, niveles o sprints. La rúbrica canónica y cualquier conexión AT→NT necesitan revisión independiente con referencias precisas y aprobación del autor.
+
+### «Dios crea» — cuidado del huerto
+
+Consulta del 2026-11-16. Gn 2:15 presenta a Dios colocando al hombre en Edén para cultivar y cuidar el huerto. El hombre ya había sido formado y situado allí en Gn 2:7–8. La formación de la mujer se relata después, en Gn 2:21–22. [Reina-Valera 1909, Génesis 2](https://ebible.org/spaRV1909/GEN02.htm#V15)
+
+El autor aprobó una tarea de riego con dos brotes. Cualquiera de los dos personajes puede regar uno o ambos. La tarea es una adaptación jugable ambientada después de la creación de ambos personajes. [Gn 2:7–25](https://ebible.org/spaRV1909/GEN02.htm)
+
+### «Dios crea» — animales y frutos
+
+Gn 2:19–20 atribuye a Adán la acción de nombrar las bestias y las aves antes de que el relato describa la formación de la mujer (Gn 2:21–22). El pasaje identifica grupos de animales. Gn 2:9 presenta árboles aptos para alimento y distingue el árbol de la vida y el del conocimiento del bien y del mal. Gn 2:16–17 permite al hombre comer de los árboles del huerto y exceptúa el del conocimiento del bien y del mal. [Reina-Valera 1909, Génesis 2](https://ebible.org/spaRV1909/GEN02.htm)
+
+El autor aprobó dos asnos provisionales que crecen tras tres alimentaciones y pueden montarse de adultos, un fruto genérico que cualquiera de los dos personajes puede comer y nombres editables por Adán. Las especies y sus interacciones, el fruto genérico y la edición de nombres tras la creación de ambos personajes son adaptaciones jugables. [Gn 2:9, 16–22](https://ebible.org/spaRV1909/GEN02.htm)

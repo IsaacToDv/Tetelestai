@@ -9,13 +9,13 @@ Aventura bíblica multijugador low-poly, respetuosa y entretenida, donde cada ma
 
 Las referencias a otros juegos orientan sus mecánicas y apariencia. La diversión proviene de explorar, descubrir y superar retos juntos; no se busca un juego de risa. Objetivo: web móvil y escritorio, 4–8 jugadores, público de 13 años en adelante.
 
-## Desarrollo del corte técnico histórico de Génesis
+## Primera entrega de «Dios crea»
 
-El código actual corresponde a Abram/Lot y se conserva para posible reutilización. La campaña comenzará en el Edén, en tercera persona; sus parámetros de guion, narrativa y juego los decide siempre el autor. El diseñador realiza la especificación técnica de lo aprobado. La nueva campaña aún no está implementada.
+La página principal abre Edén (Gn 1:1–2:25). Dos amigos entran por código, eligen Adán o Eva y exploran en tercera persona. La segunda mitad añade visita cooperativa, riego, asnos que crecen con el cuidado, monta, frutos y voz y chat por proximidad. Adán puede editar los nombres de los animales y el creador puede recuperar esos nombres reabriendo el jardín con su clave privada. El prototipo histórico Abram/Lot está disponible en `prototype.html`.
 
-Requiere Node.js 22.18 o posterior. Desde `game/`, instala con `npm ci`. Ejecuta `npm run server` en una terminal y `npm run dev` en otra. Usa dos sesiones de navegador para crear una sala privada y compartir su código. El prototipo tiene exactamente dos participantes; el objetivo del producto sigue siendo 4–8.
+Requiere Node.js 22.18 o posterior. Desde `game/`, instala con `npm ci`. Ejecuta `npm run server` en una terminal y `npm run dev` en otra. Abre la URL de Vite en dos sesiones para crear una sala privada y compartir su código. El objetivo del producto sigue siendo 4–8 participantes.
 
-La voz es optativa, comienza apagada y necesita permiso del micrófono. Las pruebas locales de WebRTC no garantizan conectividad entre redes distintas; hosting público y TURN siguen pendientes. Para acceder al micrófono fuera de localhost se necesita HTTPS.
+La voz es optativa, comienza apagada y necesita permiso del micrófono. Las pruebas locales de WebRTC no garantizan conectividad entre redes distintas. Hosting público y TURN siguen pendientes. Consulta [cómo probarlo en tu equipo](LOCAL.md).
 
 Validación del desarrollo: `npm run lint`, `npm run typecheck`, `npm test` y `npm run build` dentro de `game/`. `typecheck` revisa JavaScript con JSDoc; el proyecto no cambia de lenguaje.
 

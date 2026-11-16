@@ -1,6 +1,6 @@
 /** Keyboard and captured pointer input share the same directional state. */
 export class Input {
-  /** @param {(message:object)=>boolean} send @param {HTMLElement} controls */
+  /** @param {(message:{type:'input',dx:number,dz:number})=>boolean} send @param {HTMLElement} controls */
   constructor(send, controls) {
     this.send = send; this.active = false;
     this.keys = new Set();

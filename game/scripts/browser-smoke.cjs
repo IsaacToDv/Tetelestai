@@ -7,7 +7,7 @@ const fs = require('node:fs');
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--use-fake-device-for-media-stream', '--autoplay-policy=no-user-gesture-required'] });
   const report = { errors: [], checks: [], audio: [] };
   const pages = [];
-  const origin = process.env.SMOKE_URL || 'http://127.0.0.1:5173';
+  const origin = process.env.SMOKE_URL || 'http://127.0.0.1:5173/prototype.html';
   async function context(options) {
     const ctx = await browser.newContext({ permissions: ['microphone'], ...options });
     await ctx.addInitScript(() => {
@@ -71,9 +71,12 @@ const fs = require('node:fs');
     await a.click('#ready'); await b.click('#ready'); await a.waitForSelector('#challenge:visible'); await b.waitForSelector('#challenge:visible');
     async function choose(page, places) { for (const place of places) await page.click(`[data-place="${place}"]`); }
     await choose(a, ['siquem', 'haran', 'betel-hai']); await a.click('#submit-answer'); await a.waitForFunction(() => document.querySelector('#answer-status').textContent.includes('no es correcto'));
-    await choose(a, ['haran', 'siquem', 'betel-hai']); await choose(b, ['haran', 'siquem', 'betel-hai']);
-    await Promise.all([a.click('#submit-answer'), b.click('#submit-answer')]); await a.waitForSelector('#result:visible'); await b.waitForSelector('#result:visible');
+    await choose(a, ['haran', 'siquem', 'betel-hai']); await a.click('#submit-answer');
+    // Room tests use a controlled clock to verify the 250 ms tie window.
+    await a.waitForSelector('#result:visible'); await b.waitForSelector('#result:visible');
     report.result = await a.locator('#result-text').textContent();
+    assert.match(report.result, /Recibes una ficha de agua/);
+    assert.match(await b.locator('#result-text').textContent(), /Tu compañero resolvió primero/);
     await a.screenshot({ path: '/tmp/tetelestai-sprint1-result.png' });
     await a.click('#retry'); await b.click('#retry'); await a.waitForSelector('#challenge:visible');
     await b.reload(); await a.waitForFunction(() => document.querySelector('#result-text').textContent.includes('cancelada'));

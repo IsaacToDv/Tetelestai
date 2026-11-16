@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "private code, two clients, exclusive selection",
+    "keyboard movement replicated remotely, mouse drag changes walking direction",
+    "touch drag orbits and touch directional control walks relative to camera",
+    "leave to menu, restore focus, release and reselect character"
+  ],
+  "errors": []
+}
