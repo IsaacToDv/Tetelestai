@@ -5,6 +5,8 @@ Cada libro tiene 12-15 subpáginas: Lectura, Estudio, Palabras clave, Preguntas,
 **Los slugs son irregulares** (p. ej. Números usa `analisis-mn`). Lee los enlaces reales de la página raíz del libro; no los construyas.
 Derechos: el sitio indica "Todos los derechos reservados". Resume y cita la URL; no copies páginas.
 
+Verificación Sprint 0 (2026-11-15): la raíz de Génesis respondió HTTP 200 y expone los 14 enlaces siguientes. Las rutas abreviadas se resuelven bajo `/antiguo-testamento-1/genesis-1`, no bajo la raíz del dominio. Estudio y Personas clave también respondieron HTTP 200. Las demás secciones están indexadas por sus enlaces, sin afirmar revisión de su contenido.
+
 ## Génesis — https://www.indubiblia.org/antiguo-testamento-1/genesis-1
 `/lectura-de-gn` · `/estudio-gn` · `/palabras-claves-gn` · `/preguntas-gn` · `/figuras-gn` · `/arqueologia-gn` · `/personas-clave-gn` · `/analisis-gn` · `/genesis` (Comentario) · `/graficos-gn` · `/segmentos-gn` · `/mapas-gn` · `/videos-gn-1` · `/aplicacion-gn`
 

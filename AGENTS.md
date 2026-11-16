@@ -1,6 +1,6 @@
 # Tetelestai — Enjambre Codex + PlayCanvas
 
-Juego: **Tetelestai**. Party game multijugador low-poly (friendslop): cada mapa es un libro de la Biblia. Diseño completo en `docs/GDD.md` (lee solo la sección que necesites).
+Juego: **Tetelestai**. Aventura bíblica multijugador low-poly: cada mapa es un libro de la Biblia. La referencia friendslop orienta lo visual y las mecánicas; el tono es respetuoso y entretenido, sin enfoque cómico. Diseño completo en `docs/GDD.md` (lee solo la sección que necesites).
 Habla con el usuario en **español**. Código, commits y nombres de archivo en inglés.
 
 ## 1. Archivos vivos
@@ -30,7 +30,7 @@ Reglas:
 No adivines. Si falta información o hay dos caminos razonables, pregunta con 2-4 opciones y tu recomendación (herramienta de preguntas si existe; si no, lista numerada). Agrupa en una ronda (máx. 5) y avanza con lo que no depende de la respuesta.
 Nada pasa a "cerrado" sin OK explícito del usuario en estas puertas:
 - **V1 Contenido bíblico**: diálogos, fragmentos AT→NT, decisiones y canon, retos bíblicos, cinemática del evangelio.
-- **V2 Teología y tono**: versión bíblica y licencia del texto, representación de Dios/Jesús, humor de los desvíos.
+- **V2 Teología y tono**: versión bíblica y licencia del texto, representación de Dios/Jesús, tratamiento respetuoso de los desvíos.
 - **V3 Alcance**: cambios al GDD, a Plan.md o a la ruta de sprints.
 - **V4 Costos y dependencias**: APIs de pago, créditos (Firecrawl, Tripo), hosting, servicio de voz, librerías nuevas.
 - **V5 Arte**: estilo de personajes, paleta, assets generados.
@@ -39,7 +39,7 @@ Contenido bíblico sin validar se marca `PENDIENTE_VALIDACION`. No copies texto 
 
 ## 4. Sprint 0 (Plan.md o Sprints.md vacíos)
 1. Bibliotecario: índice mínimo de Génesis y verificación de versión/documentación de PlayCanvas.
-2. Una ronda de preguntas al usuario: versión bíblica y licencia; plataforma (web escritorio o móvil), jugadores por partida y público/edad; proyecto code-first (Engine + Vite, recomendado) o proyecto del Editor; TypeScript (recomendado) o JS; hosting y servicio de voz; representación de Dios/Jesús; tono del humor; meta de rendimiento.
+2. Una ronda de preguntas al usuario: versión bíblica y licencia; plataforma (web escritorio o móvil), jugadores por partida y público/edad; proyecto code-first (Engine + Vite, recomendado) o proyecto del Editor; TypeScript (recomendado) o JS; hosting y servicio de voz; representación de Dios/Jesús; tono narrativo; meta de rendimiento.
 3. Redacta `Plan.md` y `Sprints.md` (Sprint 1 = corte vertical de `docs/GDD.md`, "Ruta sugerida"). Preséntalos y espera V3.
 
 ## 5. Ciclo de sprint

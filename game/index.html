@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#453620" />
+    <link rel="icon" href="data:," />
+    <title>Tetelestai</title>
+  </head>
+  <body>
+    <canvas id="game-canvas" aria-label="Escena de Tetelestai"></canvas>
+    <main id="interface">
+      <header class="brand"><span class="eyebrow">GÉNESIS · CORTE VERTICAL</span><h1>Tetelestai</h1><p>Un camino. Una promesa.</p></header>
+      <section class="panel" aria-label="Partida privada">
+        <p id="status" role="status">Preparando el campamento…</p>
+        <div id="lobby">
+          <h2>Encuentra a tu compañero</h2><p>Dos personas, una sala privada. Comparte el código fuera del juego.</p>
+          <button id="create" class="primary" disabled>Crear sala privada</button>
+          <form id="join-form"><label for="room-code">Código de sala</label><div class="row"><input id="room-code" maxlength="12" autocomplete="off" autocapitalize="characters" placeholder="12 caracteres" required pattern="[A-Fa-f0-9]{12}" /><button id="join" disabled>Unirme</button></div></form>
+          <p class="small">Voz opcional; micrófono apagado al entrar. Solo salas con invitación.</p>
+        </div>
+        <div id="session" hidden>
+          <div class="row spread"><span>Sala <strong id="code"></strong></span><button id="leave" class="quiet">Salir</button></div>
+          <p id="role" class="role"></p><p id="companionship"></p><p id="position" class="small"></p>
+          <section id="exploration"><h2>El punto de reunión</h2><p>Camina hasta el círculo turquesa. Cuando ambos estén dentro, confirmen continuar.</p><button id="confirm" class="primary">Estoy en el punto de reunión</button></section>
+          <details id="fragment" hidden><summary>Fragmento · Promesa y bendición</summary><p>La promesa de bendición para las familias de la tierra se relaciona con la lectura que Pablo hace de la promesa y de Cristo en Gálatas. Esta explicación se dirige al jugador.</p><p class="references">Génesis 12:1–3 · Gálatas 3:8,16</p><p class="small">Resumen original. No se reproducen versículos. Lot ya acompaña a Abram; el rol es secreto para los jugadores.</p></details>
+          <section id="pre-challenge" hidden><h2>La ruta del viaje</h2><p>Ordena tres lugares. Ambos deben estar listos; disponen de 45 segundos. Una respuesta errónea permite reintentar; aciertos dentro de 250 ms empatan.</p><p class="references">Génesis 12:4–5; 12:6; 12:8</p><button id="ready" class="primary">He leído · Iniciar reto</button></section>
+          <section id="challenge" hidden><div class="row spread"><h2>Ordena el viaje</h2><strong id="timer"></strong></div><p>Pulsa los lugares en orden de recorrido.</p><div class="cards"><button data-place="siquem">Siquem</button><button data-place="betel-hai">Zona entre Betel y Hai</button><button data-place="haran">Harán</button></div><ol id="sequence"></ol><div class="row"><button id="reset-sequence">Reordenar</button><button id="submit-answer" class="primary" disabled>Enviar secuencia</button></div><p id="answer-status" role="status"></p></section>
+          <section id="result" hidden><h2>Resultado del recorrido</h2><p id="result-text"></p><p id="water"></p><p class="small">La ficha de agua es simbólica. Ambos pueden concluir; el resultado no mide la fe ni altera el relato.</p><div class="row"><button id="retry">Repetir reto</button><button id="end" class="primary">Concluir recorrido</button></div></section>
+          <section id="complete" hidden><h2>Recorrido completado</h2><p>Descubrieron el fragmento de Génesis juntos. Este corte termina aquí.</p></section>
+          <details id="communication"><summary>Hablar con tu compañero</summary><p id="proximity" class="small"></p><div class="row wrap"><button id="microphone">Activar micrófono</button><button id="listen">Escuchar voz</button><button id="mute" aria-pressed="false">Silenciar voz</button><button id="block" aria-pressed="false">Bloquear voz y chat</button></div><p id="voice-status" class="small" role="status">Micrófono apagado. Chat de texto disponible cerca del compañero.</p><ul id="messages" aria-label="Mensajes de proximidad" aria-live="polite"></ul><form id="chat-form" class="row"><input id="chat-text" maxlength="300" aria-label="Mensaje para tu compañero" placeholder="Mensaje de proximidad" /><button id="send-chat">Enviar</button></form></details>
+        </div>
+      </section>
+      <nav id="controls" aria-label="Movimiento"><button data-direction="up" aria-label="Caminar hacia arriba">▲</button><button data-direction="left" aria-label="Caminar a la izquierda">◀</button><span aria-hidden="true">✦</span><button data-direction="right" aria-label="Caminar a la derecha">▶</button><button data-direction="down" aria-label="Caminar hacia abajo">▼</button></nav>
+      <p class="movement-hint">WASD / flechas / botones · Azul: tú · Ocre: compañero</p>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
