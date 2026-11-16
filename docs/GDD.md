@@ -1,5 +1,9 @@
 # GDD — Tetelestai
 
+> Revisión vigente (2026-11-16): iniciar «Dios crea» (Gn 1:1–2:25) explorando el Edén tras la creación de los personajes, en tercera persona. El autor desea menú, sorteo de personajes entre amigos, elección manual y emparejamiento con desconocidos; faltan reglas concretas y V4/V6 del servicio público. Busca libertad de exploración con guía progresiva mediante tareas/oficios y encuentros. El autor decide siempre los parámetros de guion, narrativa y juego; el diseñador los formaliza técnicamente. Decisiones, ejemplos PENDIENTE_VALIDACION y preguntas se mantienen en `Plan.md`, sección «Revisión de Sprint 0». Las notas históricas de abajo no fijan el alcance de esta campaña.
+
+> Dirección vigente del autor: la historia comienza siguiendo los segmentos de Génesis en orden según indubiblia.org, no con Abraham. Bibliotecario verifica la secuencia; toda adaptación narrativa, histórica o mecánica se consulta al autor antes de implementarse. Abram/Lot se conserva como prototipo técnico. Las notas de episodios y mecánicas anteriores no son autorización general de nuevos contenidos.
+
 > Dirección actualizada por indicación del autor: aventura bíblica respetuosa y entretenida. Friendslop es una referencia visual y de mecánicas, no una intención cómica. La ruta general de Plan/Sprints fue aprobada en V3; los detalles nuevos de Sprint 1 requieren su validación; los contenidos bíblicos concretos están PENDIENTE_VALIDACION (V1/V2).
 
 ## 1. Idea del autor, con aclaración de tono
@@ -37,9 +41,9 @@ Con eso de voz proximidad el multijugador empareja personaje aleatoriamente y co
 * Barra de Progreso: Cada Fragmento descubierto llena un medidor global de "Revelación" en la partida.
 * Cinemática Final: Al reunir todos los fragmentos del libro, se desbloquea una cinemática in-game especial. Esta escena conecta todo lo que hicieron en ese libro del Antiguo Testamento con la historia de redención en el Nuevo Testamento, cerrando la partida con un mensaje evangelístico claro, emocionante y visual.
 
-## 3. Ruta del equipo — base aprobada, detalles pendientes
+## 3. Ruta histórica del equipo — no es el inicio de campaña vigente
 
-La ruta general fue aprobada al cerrar Sprint 0. Las decisiones concretas pendientes y su estado se registran en Plan.md, Sprints.md y docs/design/genesis-vertical-slice.md.
+La ruta general siguiente fue aprobada al cerrar el Sprint 0 original para el corte técnico Abram/Lot. La revisión actual usa entregas jugables pequeñas con disciplinas combinadas y validación del autor antes de avanzar. El alcance de campaña vigente se registra en Plan.md y Sprints.md; docs/design/genesis-vertical-slice.md conserva el diseño histórico.
 
 1. **Ruta sugerida**: Sprint 1 = corte vertical mínimo: un mapa (Génesis), dos roles (Abraham y Lot), movimiento, voz/chat de proximidad, un fragmento y un reto 1 vs 1. Génesis y Éxodo son de los libros del AT más citados en el NT, según indubiblia.org, buenos candidatos para los primeros mapas.
 2. **Jugadores impares o pocos**: definir qué pasa si hay menos jugadores que roles (NPC que cubra al rol ausente o roles mínimos por partida).
