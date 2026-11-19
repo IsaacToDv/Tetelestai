@@ -279,10 +279,6 @@ test('Edén broadcasts validated river and wildlife effects only inside the room
   assert.equal(feeding.target, 'pison');
   assert.equal(isEdenWater(feeding.x, feeding.z), true);
   assert.deepEqual(await a.until(effect('feed-fish')), feeding);
-  Object.assign(explorer, { x: -29, z: -22 });
-  interact('drink');
-  assert.match((await a.until(error)).message, /orilla/);
-
   assert.deepEqual(EDEN_RIVERS.map(({ label }) => label), ['Pisón', 'Gihón', 'Hiddekel', 'Éufrates']);
   for (const river of EDEN_RIVERS) {
     assert.deepEqual(river.points[0], EDEN_RIVERS[0].points[0]);
@@ -306,6 +302,9 @@ test('Edén broadcasts validated river and wildlife effects only inside the room
       type: 'eden-effect', effect: animal.action, actor: self, target: animal.id, x: animal.x, z: animal.z,
     });
   }
+  Object.assign(explorer, { x: -29, z: -22 });
+  interact('drink');
+  assert.match((await a.until(error)).message, /orilla/);
   assert.equal(outsider.messages.some((message) => message.type === 'eden-effect'), false);
 });
 

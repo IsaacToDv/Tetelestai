@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "opt-in voice with decoded audio both ways; proximity text, mute and block",
+    "both visits, retained through rejoin via keyboard and touch; Adam waters both sprouts and both see completion",
+    "rename and visibility, grow in three feeds, mount and move, dismount, fruit feedback",
+    "creator-only reopen key and edited name restored after room emptied"
+  ],
+  "errors": [],
+  "audio": [
+    {
+      "bytes": 677,
+      "energy": 0.0022220865864720613
+    },
+    {
+      "bytes": 273,
+      "energy": 4.656897103182652e-11
+    }
+  ]
+}

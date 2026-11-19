@@ -90,6 +90,8 @@ Validaciones pendientes: OK explícito del autor para cerrar tras prueba del cor
 
 Resultado y lecciones: lint, checkJs, 40 pruebas y build de Pages pasaron. Dos sesiones de Chrome comprobaron beber, entrar al agua con teclado y toque, salir a tierra, llamar al león, alimentar a los peces en Pisón y silenciar los efectos. Las pruebas del servidor cubren las acciones de toda la fauna, los cuatro ramales y la pausa del asno. El agua usa reflejo aproximado del cielo. El build conserva el aviso de tamaño del motor y quedan pendientes mediciones de rendimiento en dispositivos físicos. [Informe](docs/evidence/eden-rivers/tetelestai-rivers-smoke.json) · [Natación](docs/evidence/eden-rivers/tetelestai-river-swimming.png) · [Peces](docs/evidence/eden-rivers/tetelestai-river-fish.png) · [Móvil emulado](docs/evidence/eden-rivers/tetelestai-river-mobile.png)
 
+La regresión de Chrome comprobó visita, riego, asnos, fruto, reapertura, chat y voz WebRTC con audio simulado en ambas direcciones y cero errores de consola. [Informe de regresión](docs/evidence/eden-rivers/tetelestai-eden-garden-regression.json)
+
 ## Sprint 1 — Corte vertical de Génesis (propuesta)
 Estado: esperando validación
 
