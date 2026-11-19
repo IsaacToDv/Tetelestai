@@ -34,7 +34,10 @@ export function createGameServer({ saveDirectory = process.env.EDEN_SAVE_DIR ?? 
     const room = client.room;
     if (!room) return;
     room.leave(client.id); client.room = null;
-    if (!room.members.size) rooms.delete(room.code);
+    if (!room.members.size) {
+      if (room instanceof EdenRoom) room.destroy();
+      rooms.delete(room.code);
+    }
     else if (room instanceof EdenRoom) broadcast(room);
   };
   /** @param {Client} client @param {unknown} raw */
@@ -66,7 +69,10 @@ export function createGameServer({ saveDirectory = process.env.EDEN_SAVE_DIR ?? 
             if (eden) {
               const saved = world ?? worldStore.create();
               world = saved;
-              target = new EdenRoom(code, Date.now, { ...saved, saveNames: (names) => worldStore.saveNames(saved.key, names) });
+              const garden = new EdenRoom(code, Date.now, { ...saved, saveNames: (names) => worldStore.saveNames(saved.key, names) }, (effect) => {
+                for (const id of garden.members.keys()) send(id, effect);
+              });
+              target = garden;
             } else target = new Room(code, send);
             rooms.set(code, target);
           }
@@ -196,6 +202,7 @@ export function createGameServer({ saveDirectory = process.env.EDEN_SAVE_DIR ?? 
     async close() {
       clearInterval(timer); clearInterval(heartbeat);
       for (const client of clients.values()) client.socket.terminate();
+      for (const room of rooms.values()) if (room instanceof EdenRoom) room.destroy();
       await new Promise((resolve) => wss.close(resolve));
       await new Promise((resolve) => http.close(resolve));
     },

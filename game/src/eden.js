@@ -2,6 +2,8 @@ import { Input } from './core/input.js';
 import { Connection } from './net/connection.js';
 import { createEdenScene } from './graphics/eden-scene.js';
 import { Voice } from './voice/voice.js';
+import { createEdenAudio } from './audio/eden-audio.js';
+import { createRiverSample, edenRiverShore, EDEN_RIVERS, EDEN_WATER_Y, EDEN_WILDLIFE, sampleEdenRiver } from '../data/eden-rivers.js';
 import './eden.css';
 
 /** @import {EdenState, ServerMessage} from './net/connection.js' */
@@ -43,7 +45,13 @@ const waterButton = element('eden-water', HTMLButtonElement);
 const feedButton = element('eden-feed', HTMLButtonElement);
 const mountButton = element('eden-mount', HTMLButtonElement);
 const eatButton = element('eden-eat', HTMLButtonElement);
-const activityButtons = [visitButton, waterButton, feedButton, mountButton, eatButton];
+const drinkButton = element('eden-drink', HTMLButtonElement);
+const fishButton = element('eden-feed-fish', HTMLButtonElement);
+const wildlifeButton = element('eden-wildlife', HTMLButtonElement);
+const activityButtons = [visitButton, waterButton, feedButton, mountButton, eatButton, drinkButton, wildlifeButton, fishButton];
+const exploration = element('eden-exploration', HTMLDetailsElement);
+const riverStatus = element('eden-river-status', HTMLElement);
+const effectsButton = element('eden-effects', HTMLButtonElement);
 const animals = element('eden-animals', HTMLDetailsElement);
 const animalList = element('eden-animal-list', HTMLElement);
 const nameForm = element('eden-name-form', HTMLFormElement);
@@ -63,11 +71,21 @@ const chatSend = element('eden-chat-send', HTMLButtonElement);
 const characterButtons = document.querySelectorAll('button[data-character]');
 const listeners = new AbortController();
 const events = { signal: listeners.signal };
+const riverSample = createRiverSample();
+const riverSounds = EDEN_RIVERS.map(({ points }) => ({ x: points[2][0], y: EDEN_WATER_Y, z: points[2][1] }));
+riverSounds.push({ x: 17, y: EDEN_WATER_Y, z: -1 });
+const wildlifeLabels = { 'pet-sheep': 'Acariciar oveja', 'call-lion': 'Llamar al león', 'feed-giraffe': 'Dar hojas' };
+const effectCues = /** @type {const} */ ({ splash: 'splash', drink: 'drink', 'feed-fish': 'splash', 'pet-sheep': 'sheep', 'call-lion': 'lion', 'feed-giraffe': 'giraffe' });
+const effectFeedback = {
+  splash: 'Estás nadando.', drink: 'Has bebido agua.', 'feed-fish': 'Los peces se acercan al alimento.',
+  'pet-sheep': 'La oveja responde con un balido.', 'call-lion': 'El león levanta la cabeza.', 'feed-giraffe': 'La jirafa baja el hocico para tomar las hojas.',
+};
 
 /** @type {EdenState|null} */ let state = null;
 /** @type {Connection|undefined} */ let connection;
 /** @type {Input|undefined} */ let input;
 /** @type {Voice|undefined} */ let voice;
+/** @type {ReturnType<typeof createEdenAudio>|undefined} */ let audio;
 /** @type {ReturnType<typeof createEdenScene>|undefined} */ let scene;
 /** @type {'enter'|'select'|'leave'|null} */ let pending = null;
 /** @type {number|null} */ let lookPointer = null;
@@ -76,6 +94,7 @@ let lastLookY = 0;
 let connected = false;
 let hasPrivateKey = false;
 let animalListText = '';
+let effectsMuted = false;
 /** @type {ReturnType<typeof setTimeout>|undefined} */ let feedbackTimer;
 
 /** @param {object} message */
@@ -88,6 +107,12 @@ function writeText(node, text) { if (node.textContent !== text) node.textContent
 function setStatus(message) {
   clearTimeout(feedbackTimer);
   writeText(status, message);
+}
+
+/** @param {string} message */
+function showFeedback(message) {
+  setStatus(message);
+  feedbackTimer = setTimeout(() => setStatus(''), 3500);
 }
 
 /** @param {EdenState['players'][number]|undefined} self */
@@ -118,6 +143,21 @@ function renderActivities(self) {
   writeText(mountButton, riding ? 'Desmontar' : 'Montar');
   eatButton.hidden = !garden.fruit.available || !withinReach(garden.fruit);
   nameForm.hidden = self.character !== 'adam';
+
+  const shore = self.swimming ? null : edenRiverShore(self.x, self.z);
+  drinkButton.hidden = !shore;
+  fishButton.hidden = !shore || shore.riverId === 'eden';
+  const wildlife = self.swimming ? undefined : EDEN_WILDLIFE.find(withinReach);
+  wildlifeButton.hidden = !wildlife;
+  wildlifeButton.dataset.target = wildlife?.id ?? '';
+  wildlifeButton.dataset.action = wildlife?.action ?? '';
+  writeText(wildlifeButton, wildlife ? wildlifeLabels[wildlife.action] : '');
+  sampleEdenRiver(self.x, self.z, riverSample);
+  let context = riverSample.distance < 2.25 ? riverSample.river.label : '';
+  if (riding?.alert) context = 'El asno baja la cabeza. Suelta el control de movimiento y vuelve a avanzar.';
+  else if (self.swimming) context = `${riverSample.river.label} · Nadando`;
+  riverStatus.hidden = context === '';
+  writeText(riverStatus, context);
 
   const labels = garden.animals.map((item, index) => `${item.name || `Asno ${index + 1}`} · ${item.feeds >= 3 ? 'adulto' : `cría, alimentación ${item.feeds}/3`}`);
   const listKey = JSON.stringify(labels);
@@ -152,9 +192,11 @@ function renderCommunication() {
 
 function resetGardenControls() {
   voice?.reset(false);
+  audio?.stop();
   voiceStatus.textContent = 'Micrófono apagado.';
   communication.open = false;
   animals.open = false;
+  exploration.open = false;
   world.open = false;
   worldKey.textContent = '';
   hasPrivateKey = false;
@@ -218,9 +260,11 @@ function receive(message) {
     case 'eden-state': {
       const entering = state === null;
       const ownCharacter = message.players.find((player) => player.id === message.self)?.character;
+      const wasPlaying = state?.players.some((player) => player.id === state?.self && player.character);
       state = message;
       scene?.setState(message);
       if (ownCharacter && pending !== 'leave') {
+        if (!wasPlaying) audio?.start(riverSounds);
         if (voice && voice.blocked !== message.blocked) voice.block(message.blocked);
         voice?.update(message);
       }
@@ -259,9 +303,14 @@ function receive(message) {
       worldInput.value = '';
       break;
     case 'eden-feedback':
-      setStatus(message.message);
-      feedbackTimer = setTimeout(() => setStatus(''), 3500);
+      showFeedback(message.message);
       break;
+    case 'eden-effect':
+      if (play.hidden || !state) return;
+      scene?.effect(message);
+      audio?.playAt(effectCues[message.effect], message.x, EDEN_WATER_Y, message.z);
+      if (message.actor === state.self) showFeedback(effectFeedback[message.effect]);
+      return;
     case 'chat': {
       if (!state || state.blocked || pending === 'leave') return;
       const item = document.createElement('li');
@@ -288,7 +337,10 @@ function request(message, action) {
   if (pending === 'leave' || (pending !== null && action !== 'leave')) return;
   if (!connection?.send(message)) return;
   pending = action;
-  if (action === 'leave') voice?.reset(false);
+  if (action === 'leave') {
+    voice?.reset(false);
+    audio?.stop();
+  }
   render();
 }
 
@@ -307,13 +359,15 @@ function dispose() {
   stopLooking();
   input?.destroy();
   voice?.destroy(false);
+  audio?.destroy();
   connection?.destroy();
   scene?.destroy();
 }
 
 try {
-  scene = createEdenScene(canvas);
-  input = new Input(move, controls);
+  audio = createEdenAudio();
+  scene = createEdenScene(canvas, audio.setListener);
+  input = new Input(move, controls, true);
   connection = new Connection(receive, setStatus);
   voice = new Voice(send, (message) => writeText(voiceStatus, message));
   voiceStatus.textContent = 'Micrófono apagado.';
@@ -330,13 +384,24 @@ try {
   leave.addEventListener('click', () => request({ type: 'leave' }, 'leave'), events);
   for (const button of characterButtons) {
     if (!(button instanceof HTMLButtonElement)) continue;
-    button.addEventListener('click', () => request({ type: 'select-character', character: button.dataset.character }, 'select'), events);
+    button.addEventListener('click', () => {
+      audio?.unlock();
+      request({ type: 'select-character', character: button.dataset.character }, 'select');
+    }, events);
   }
 
   visitButton.addEventListener('click', () => send({ type: 'visit' }), events);
-  for (const [button, action] of [[waterButton, 'water'], [feedButton, 'feed'], [mountButton, 'mount'], [eatButton, 'eat']]) {
+  for (const [button, action] of [[waterButton, 'water'], [feedButton, 'feed'], [mountButton, 'mount'], [eatButton, 'eat'], [drinkButton, 'drink'], [fishButton, 'feed-fish']]) {
     if (button instanceof HTMLButtonElement) button.addEventListener('click', () => send({ type: 'interact', action, target: button.dataset.target }), events);
   }
+  wildlifeButton.addEventListener('click', () => send({ type: 'interact', action: wildlifeButton.dataset.action, target: wildlifeButton.dataset.target }), events);
+  effectsButton.addEventListener('click', () => {
+    effectsMuted = !effectsMuted;
+    audio?.setMuted(effectsMuted);
+    if (!effectsMuted) audio?.unlock();
+    effectsButton.setAttribute('aria-pressed', String(effectsMuted));
+    writeText(effectsButton, effectsMuted ? 'Reactivar efectos' : 'Silenciar efectos');
+  }, events);
   window.addEventListener('keydown', (event) => {
     if (play.hidden || event.code !== 'KeyE' || event.repeat || event.target instanceof HTMLInputElement || event.target instanceof window.HTMLSelectElement || event.target instanceof HTMLTextAreaElement) return;
     const action = activityButtons.find((button) => !button.hidden);

@@ -10,6 +10,8 @@
 
 La guía del jardín muestra la visita y el riego. Acércate a cada señal para que aparezca la acción. Pulsa E en el teclado o el botón que muestra el juego. El panel «Animales» muestra su crecimiento y permite editar los nombres si juegas como Adán.
 
+Sigue el río hasta Pisón, Gihón, Hiddekel y Éufrates. Camina hacia el agua para nadar y vuelve a la orilla con los mismos controles. Si vas montado, el asno se detiene y baja la cabeza al llegar al agua. Suelta el control de movimiento y vuelve a avanzar para entrar con él. En la orilla aparecen «Beber» y, junto a los ramales, «Dar alimento a los peces». Acércate a las ovejas, al león y a la jirafa para ver sus acciones. En «Ríos de Edén» puedes silenciar los efectos espaciales.
+
 Quien cree el jardín puede copiar su **clave privada del jardín** del panel de sala. Para recuperarlo, usa «Reabrir mi jardín» y pega esa clave. Los nombres se conservan tras reiniciar el servidor mientras se conserve `game/.eden-data/`. El progreso de las actividades permanece mientras la sala está ocupada. Comparte el código de sala con tu amigo.
 
 Mantén ambas terminales abiertas. Detén los procesos con Ctrl+C al terminar. Puedes editar los archivos con tu editor habitual; Vite recarga el cliente durante el desarrollo.
@@ -50,7 +52,7 @@ El workflow `Game checks` ejecuta instalación, lint, verificación de JavaScrip
 Si prefieres trabajar con historial Git y subir tus cambios después, puedes clonar la rama en lugar de descomprimir el ZIP:
 
 ```sh
-git clone --branch sprint-1/genesis-vertical-slice https://github.com/IsaacToDv/Tetelestai.git
+git clone --branch sprint-2/eden-rivers https://github.com/IsaacToDv/Tetelestai.git
 cd Tetelestai/game
 npm ci
 ```

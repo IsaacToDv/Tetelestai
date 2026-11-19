@@ -1,6 +1,6 @@
 # Tetelestai — Plan
 
-Estado: ambas mitades de Sprint 1 de Edén implementadas y verificadas localmente (2026-11-16). El autor autorizó el cierre del sprint y su integración en main. Sprint 0 de revisión sigue abierto y se conserva el corte técnico Abram/Lot.
+Estado: el autor autorizó el cierre de Sprint 1 de Edén y su integración en main. Sprint 2 amplía la exploración de «Dios crea» y está esperando validación del autor. Sprint 0 de revisión sigue abierto y se conserva el corte técnico Abram/Lot.
 
 ## Visión confirmada
 Aventura bíblica multijugador low-poly, respetuosa y entretenida. Cada mapa representa un libro de la Biblia. Las referencias a friendslop son visuales y mecánicas; no se busca comedia, caos como finalidad ni caricaturizar el relato. Exploración, misterio, encuentros, retos y descubrimientos sostienen la diversión. La dirección vigente está en `docs/GDD.md`.
@@ -32,6 +32,25 @@ Personajes controlables y cantidad de participantes del primer tramo; inicio y c
 - **Aprobado.** Solo Adán puede dar y editar nombres (Gn 2:19–20). Los nombres se guardan por jardín en el servidor y el creador puede reabrirlo con su clave privada incluso tras reiniciar el servidor. La clave privada y el código de invitación tienen propósitos distintos.
 
 Comprobación de lo aprobado: dos sesiones entran por código, completan una visita por personaje con teclado y toque y observan el mismo estado. Con una sesión todavía en sala, volver conserva el aporte. Tras completar, se puede caminar y regresar al menú. Probar entrega de chat y audio WebRTC simulado en ambos sentidos, salida del alcance, silencio, bloqueo y salida de sala. Usar consola y capturas de escritorio y móvil emulado.
+
+### Sprint 2 — Alcance de campaña aprobado
+
+El autor eligió ampliar el Edén dentro de «Dios crea». Quiere pasear junto al río y sus cuatro ramales según Gn 2:10–14, ver y oír el agua y los peces, nadar, beber y bañarse mediante interacción libre y física Jolt integrada con PlayCanvas. Eligió dos ovejas, un león y una jirafa como adaptaciones jugables (contexto de animales en Gn 2:19–20). Aprobó el arte provisional low-poly con primitivas, paleta actual, agua azul verdosa y rocas, y pidió agua de apariencia realista. Aprobó el agua continua por ramal y los sonidos de interacción con agua y animales en 3D mediante Howler.js, con opción de silenciar efectos.
+
+Reglas aprobadas por el autor:
+
+- El río que riega el jardín se divide en Pisón, Gihón, Hiddekel y Éufrates (Gn 2:10–14). Los senderos siguen los cauces. La forma y ubicación locales son adaptaciones jugables.
+- Adán y Eva pueden entrar y salir por las orillas. Nadan libremente en superficie con los controles actuales. El asno montado se frena y baja la cabeza al llegar a la orilla. Tras soltar y volver a pulsar avance, entra y nada con su jinete.
+- Beber es una acción de orilla con E o botón. Entrar al agua y nadar permite bañarse libremente. Las acciones tienen respuesta visual y sonora y carecen de medidores o efectos duraderos.
+- Dos ovejas pastan y se dejan acariciar. El león permanece en reposo y al llamarlo levanta la cabeza. La jirafa ramonea y al darle hojas baja el hocico. Ambos personajes pueden repetir estas acciones con E o botón y recibir una respuesta breve visual y sonora. No consumen inventario.
+- Tres peces visibles por ramal nadan en el cauce. Ambos personajes pueden darles alimento desde la orilla. Los tres nadan hacia el punto por unos segundos y producen salpicaduras. Se puede repetir sin inventario.
+- Agua continua por ramal y sonidos espaciales de interacción con el agua y los animales. Un control permite silenciar los efectos. La sala privada para dos jugadores y las actividades de Sprint 1 son la base de la ampliación.
+
+Implementación técnica:
+
+- Agua: material GLSL compartido de PlayCanvas 2.24.1 (`ShaderMaterial`) sobre malla indexada. UV longitudinal para la corriente y transversal para orillas y profundidad aparente. Usar reflexión aproximada de cielo, Fresnel, brillo solar y la niebla del jardín en una sola pasada WebGL2. El módulo gráfico recibirá el trazado autorizado posteriormente y se limitará al render. Verificar compilación, movimiento y lectura de agua junto a la orilla en dos tamaños de pantalla.
+- Audio: Howler.js 2.2.4 (MIT), versión fijada en npm. Usar el build con `spatial`, Web Audio y el marco de cámara de la escena para la orientación. Los efectos de juego se gestionarán aparte de las pistas WebRTC de voz. Verificar activación por gesto, atenuación, orientación y liberación al volver al menú.
+- Física: JoltPhysics.js 1.1.1 monohilo en el servidor Node, con cuerpos dinámicos y flotación en superficie. PlayCanvas renderiza posiciones de la sala. Una geometría compartida de cauces define terreno, superficie y consultas en servidor y cliente. Verificar orillas, flotación, pausa de asno, desmonte, caducidad de entrada y liberación al salir.
 
 ## Decisiones del autor
 - Web móvil y escritorio; objetivo de producto: 4–8 jugadores, público 13+.

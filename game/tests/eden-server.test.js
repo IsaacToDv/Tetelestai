@@ -5,12 +5,14 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { WebSocket } from 'ws';
+import { EDEN_BOUNDS, EDEN_RIVERS, EDEN_WILDLIFE, edenRiverShore, isEdenWater } from '../data/eden-rivers.js';
 import { EdenRoom } from '../server/eden-room.js';
 import { createGameServer } from '../server/server.js';
 
-async function setup(t, saveDirectory) {
+async function setup(t, saveDirectory, inspectServer) {
   const directory = saveDirectory ?? await mkdtemp(join(tmpdir(), 'tetelestai-eden-server-'));
   const server = createGameServer({ saveDirectory: directory });
+  inspectServer?.(server);
   t.after(async () => {
     await server.close();
     if (!saveDirectory) await rm(directory, { recursive: true, force: true });
@@ -108,18 +110,203 @@ test('Edén clamps coordinates and stops movement when input expires', () => {
   const room = new EdenRoom('EDEN', () => now);
   room.join('a');
   room.select('a', 'eve');
-  for (let tick = 0; tick < 40; tick++) {
-    room.input('a', 1, 1);
+  for (let tick = 0; tick < 180; tick++) {
+    room.input('a', -1, 0);
+    now += 100;
+    room.tick(0.1);
+  }
+  for (let tick = 0; tick < 70; tick++) {
+    room.input('a', 0, 1);
     now += 100;
     room.tick(0.1);
   }
   const [{ x, z }] = room.snapshot('a').players;
-  assert.equal(x, 11);
-  assert.equal(z, 8);
-  room.input('a', -1, -1);
+  assert.equal(x, EDEN_BOUNDS.minX);
+  assert.equal(z, EDEN_BOUNDS.maxZ);
+  room.input('a', 1, -1);
   now += 501;
   room.tick(0.1);
-  assert.deepEqual(room.snapshot('a').players, [{ id: 'a', character: 'eve', x, z, voice: false }]);
+  assert.deepEqual(room.snapshot('a').players, [{ id: 'a', character: 'eve', x, y: 0, z, swimming: false, voice: false }]);
+});
+
+function riverRoom(t) {
+  let now = 1000;
+  const effects = [];
+  const room = new EdenRoom('EDEN', () => now, undefined, (effect) => effects.push(effect));
+  t.after(() => room.destroy?.());
+  room.join('a');
+  room.select('a', 'adam');
+  const player = () => room.snapshot('a').players[0];
+  const donkey = () => room.snapshot('a').garden.animals[0];
+  return { room, effects, player, donkey, move(dx, dz, ticks) {
+    for (let tick = 0; tick < ticks; tick++) {
+      room.input('a', dx, dz);
+      now += 50;
+      room.tick(0.05);
+    }
+  }, expire() {
+    now += 501;
+    room.tick(0.05);
+  } };
+}
+
+test('Edén enters and leaves surface swimming with one splash per entry', (t) => {
+  const { room, effects, player, move } = riverRoom(t);
+  Object.assign(room.members.get('a'), { x: 14, z: 0 });
+  assert.equal(isEdenWater(player().x, player().z), false);
+  move(1, 0, 14);
+  assert.equal(player().swimming, true);
+  assert.ok(player().x > 15 && Number.isFinite(player().y));
+  assert.equal(effects.length, 1);
+  assert.equal(effects[0].effect, 'splash');
+  assert.equal(effects[0].actor, 'a');
+  move(0, 0, 24);
+  const resting = player();
+  move(0, 0, 8);
+  assert.ok(Math.abs(player().x - resting.x) < 0.05);
+  move(1, 0, 55);
+  assert.equal(player().swimming, false);
+  assert.equal(player().y, 0);
+  assert.equal(isEdenWater(player().x, player().z), false);
+  assert.equal(effects.length, 1);
+});
+
+test('a mounted donkey warns at the bank and requires release before swimming', (t) => {
+  const { room, effects, player, donkey, move, expire } = riverRoom(t);
+  const explorer = room.members.get('a');
+  Object.assign(explorer, { x: -6, z: 3 });
+  for (let feed = 0; feed < 3; feed++) assert.equal(room.interact('a', 'feed', 'donkey-1'), null);
+  assert.equal(room.interact('a', 'mount', 'donkey-1'), null);
+  Object.assign(explorer, { x: 14, z: 0 });
+  move(1, 0, 14);
+  const bankX = player().x;
+  assert.equal(donkey().alert, true);
+  assert.equal(player().swimming, false);
+  assert.equal(isEdenWater(bankX, player().z), false);
+  expire();
+  move(1, 0, 6);
+  assert.equal(player().x, bankX);
+  assert.equal(donkey().alert, true);
+  move(-1, 0, 6);
+  assert.ok(player().x < bankX);
+  assert.equal(donkey().alert, false);
+  move(1, 0, 14);
+  assert.equal(donkey().alert, true);
+  assert.equal(effects.length, 0);
+  move(0, 0, 1);
+  move(1, 0, 14);
+  assert.equal(player().swimming, true);
+  assert.equal(donkey().alert, false);
+  assert.equal(donkey().swimming, true);
+  assert.equal(donkey().rider, 'a');
+  assert.equal(donkey().x, player().x);
+  assert.equal(effects.length, 1);
+  assert.equal(room.interact('a', 'mount', 'donkey-1'), null);
+  const releaseX = donkey().x;
+  move(-1, 0, 35);
+  assert.equal(player().swimming, false);
+  assert.equal(donkey().rider, null);
+  assert.equal(donkey().x, releaseX);
+});
+
+test('swimming keeps server bounds and disconnect releases the rider while the donkey floats', (t) => {
+  const { room, player, donkey, move } = riverRoom(t);
+  const explorer = room.members.get('a');
+  Object.assign(explorer, { x: -6, z: 3 });
+  for (let feed = 0; feed < 3; feed++) room.interact('a', 'feed', 'donkey-1');
+  room.interact('a', 'mount', 'donkey-1');
+  Object.assign(explorer, { x: 14, z: 0 });
+  move(1, 0, 14);
+  move(0, 0, 1);
+  move(1, 0, 14);
+  assert.equal(player().swimming, true);
+  room.leave('a');
+  const position = { x: 0, y: 0, z: 0 };
+  assert.equal(room.physics.read('a', position), false);
+  assert.equal(room.physics.read('donkey-1', position), true);
+  assert.equal(donkey().rider, null);
+  assert.equal(donkey().alert, false);
+  room.join('b'); room.select('b', 'eve');
+  Object.assign(room.members.get('b'), { x: 42, z: -25 });
+  assert.equal(isEdenWater(42, -25), true);
+  for (let tick = 0; tick < 60; tick++) {
+    room.input('b', 1, 0);
+    room.tick(0.05);
+  }
+  const swimmer = room.snapshot('b').players[0];
+  assert.equal(swimmer.x, EDEN_BOUNDS.maxX);
+  assert.equal(swimmer.swimming, true);
+  assert.ok(Number.isFinite(swimmer.y));
+  room.destroy();
+  room.destroy();
+  assert.equal(room.physics.read('b', position), false);
+  assert.equal(room.physics.read('donkey-1', position), false);
+});
+
+test('Edén broadcasts validated river and wildlife effects only inside the room', async (t) => {
+  let server;
+  const connect = await setup(t, undefined, (current) => { server = current; });
+  const a = await connect(); const b = await connect(); const outsider = await connect();
+  a.send({ type: 'create', mode: 'eden' });
+  const { code, self } = await a.until(edenState);
+  b.send({ type: 'join', mode: 'eden', code });
+  await b.until(edenState);
+  outsider.send({ type: 'create', mode: 'eden' });
+  await outsider.until(edenState);
+  a.send({ type: 'select-character', character: 'adam' });
+  b.send({ type: 'select-character', character: 'eve' });
+  await a.until((message) => edenState(message) && message.available.length === 0);
+  const explorer = server.rooms.get(code).members.get(self);
+  const interact = (action, target) => a.send({ type: 'interact', action, target });
+  interact('drink');
+  assert.match((await a.until(error)).message, /orilla/);
+  interact('call-lion', 'lion');
+  assert.match((await a.until(error)).message, /Acércate/);
+
+  const effect = (name) => (message) => message.type === 'eden-effect' && message.effect === name;
+  Object.assign(explorer, { x: 14, z: 0 });
+  interact('feed-fish');
+  assert.match((await a.until(error)).message, /ramal/);
+  interact('drink');
+  const { riverId, x, z } = edenRiverShore(explorer.x, explorer.z);
+  const drink = { type: 'eden-effect', effect: 'drink', actor: self, target: riverId, x, z };
+  assert.deepEqual(await a.until(effect('drink')), drink);
+  assert.deepEqual(await b.until(effect('drink')), drink);
+
+  Object.assign(explorer, { x: -29, z: -19 });
+  a.send({ type: 'interact', action: 'feed-fish', target: 'euphrates', x: 2000, z: 2000 });
+  const feeding = await b.until(effect('feed-fish'));
+  assert.equal(feeding.target, 'pison');
+  assert.equal(isEdenWater(feeding.x, feeding.z), true);
+  assert.deepEqual(await a.until(effect('feed-fish')), feeding);
+  Object.assign(explorer, { x: -29, z: -22 });
+  interact('drink');
+  assert.match((await a.until(error)).message, /orilla/);
+
+  assert.deepEqual(EDEN_RIVERS.map(({ label }) => label), ['Pisón', 'Gihón', 'Hiddekel', 'Éufrates']);
+  for (const river of EDEN_RIVERS) {
+    assert.deepEqual(river.points[0], EDEN_RIVERS[0].points[0]);
+    const [centerX, centerZ] = river.points[2];
+    const bank = Array.from({ length: 16 }, (_, index) => {
+      const angle = index * Math.PI / 8;
+      return { x: centerX + Math.cos(angle) * river.width * 1.3, z: centerZ + Math.sin(angle) * river.width * 1.3 };
+    }).find(({ x, z }) => edenRiverShore(x, z)?.riverId === river.id);
+    assert.ok(bank, river.label);
+    Object.assign(explorer, bank);
+    interact('feed-fish');
+    const reaction = await b.until(effect('feed-fish'));
+    assert.equal(reaction.target, river.id);
+    assert.ok(isEdenWater(reaction.x, reaction.z));
+  }
+
+  for (const animal of EDEN_WILDLIFE) {
+    Object.assign(explorer, { x: animal.x, z: animal.z });
+    interact(animal.action, animal.id);
+    assert.deepEqual(await b.until(effect(animal.action)), {
+      type: 'eden-effect', effect: animal.action, actor: self, target: animal.id, x: animal.x, z: animal.z,
+    });
+  }
+  assert.equal(outsider.messages.some((message) => message.type === 'eden-effect'), false);
 });
 
 test('Edén only counts an in-range visit once per character, including after reselection', () => {

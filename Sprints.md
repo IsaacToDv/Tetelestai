@@ -71,6 +71,25 @@ Validaciones pendientes: rendimiento en dispositivos físicos y proveedores púb
 
 Resultado y lecciones: lint, checkJs, build para `/Tetelestai/` y 30 pruebas pasaron. El recorrido de ambas mitades pasó en dos sesiones de Chrome con Playwright, sin errores de consola. La prueba de servidor verificó el nombre editado desde una instancia nueva y el reloj controlado comprobó la reposición del fruto exactamente a los 30 s. Los nombres persisten en el directorio del servidor y las actividades viven en la sala activa. El build conserva el aviso de tamaño del motor. [Informe](docs/evidence/eden-garden/tetelestai-eden-garden-smoke.json) · [Escritorio](docs/evidence/eden-garden/tetelestai-eden-garden-desktop.png) · [Móvil emulado](docs/evidence/eden-garden/tetelestai-eden-garden-mobile.png)
 
+## Sprint 2 — Ampliar la exploración de «Dios crea»
+Estado: esperando validación
+
+Objetivo: ampliar Edén con senderos de sus ríos, interacciones, más animales, agua de apariencia realista en PlayCanvas y audio espacial con Howler.js.
+
+| id | dueño | criterio de aceptación | estado |
+|---|---|---|---|
+| S2E-01 | autor + orquestador | Confirmar natación, acciones de río, animales y sonidos | aprobado |
+| S2E-02 | bibliotecario + especialistas | Verificar Gn 2:10–14 y 2:19–20, render PlayCanvas, Jolt para Node y API espacial Howler | dossiers consultados; Howler 2.2.4 y Jolt 1.1.1 instalados, carga WASM probada |
+| S2E-03 | orquestador | Registrar decisiones, definir geometría compartida y contratos de render/simulación/audio | hecho |
+| S2E-04 | gráfico | Crear malla y shader reutilizables del cauce con corriente y reflejo aproximado; comprobar tipos y build | verificado en WebGL2 |
+| S2E-05 | técnico | Integrar Howler.js 2.2.4 con audio espacial y ciclo de vida de sala | verificado en Chrome con activación, paneo, atenuación, silencio y reentrada |
+| S2E-06 | físico + técnico | Jolt sostiene y mueve a los nadadores; el asno se frena y requiere una nueva pulsación de avance | verificado en pruebas de servidor; nado de personaje comprobado también en Chrome |
+| S2E-07 | especialistas + orquestador | Verificar cuatro ramales, nado, beber, peces, fauna, sincronización, silencio y reentrada | verificado con pruebas de servidor y humo en escritorio y móvil emulado |
+
+Validaciones pendientes: OK explícito del autor para cerrar tras prueba del corte. V1/V3 cubren la adaptación y las reglas registradas en Plan.md, V4 cubre Howler.js y Jolt, y V5 el aspecto provisional.
+
+Resultado y lecciones: lint, checkJs, 40 pruebas y build de Pages pasaron. Dos sesiones de Chrome comprobaron beber, entrar al agua con teclado y toque, salir a tierra, llamar al león, alimentar a los peces en Pisón y silenciar los efectos. Las pruebas del servidor cubren las acciones de toda la fauna, los cuatro ramales y la pausa del asno. El agua usa reflejo aproximado del cielo. El build conserva el aviso de tamaño del motor y quedan pendientes mediciones de rendimiento en dispositivos físicos. [Informe](docs/evidence/eden-rivers/tetelestai-rivers-smoke.json) · [Natación](docs/evidence/eden-rivers/tetelestai-river-swimming.png) · [Peces](docs/evidence/eden-rivers/tetelestai-river-fish.png) · [Móvil emulado](docs/evidence/eden-rivers/tetelestai-river-mobile.png)
+
 ## Sprint 1 — Corte vertical de Génesis (propuesta)
 Estado: esperando validación
 

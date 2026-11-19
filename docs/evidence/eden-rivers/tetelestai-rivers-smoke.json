@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "Keyboard drinks, crosses the river with Jolt and returns to land. Both effects reach the second session.",
+    "Touch enters the river. Effects switch toggles in the mobile layout.",
+    "The lion reacts and feeding fish on the Pisón sends a shared effect.",
+    "Both sessions return to the menu without console or protocol errors."
+  ],
+  "errors": []
+}

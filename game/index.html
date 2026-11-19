@@ -61,13 +61,23 @@
     <div id="eden-play" hidden>
       <aside id="eden-activities" class="eden-toolbox" aria-label="Actividades del jardín">
         <p id="eden-guide" role="status"></p>
+        <p id="eden-river-status" role="status" hidden></p>
         <div class="eden-action-buttons">
           <button id="eden-visit" type="button" hidden>Confirmar</button>
           <button id="eden-water" type="button" hidden>Regar</button>
           <button id="eden-feed" type="button" hidden>Alimentar</button>
           <button id="eden-mount" type="button" hidden>Montar</button>
           <button id="eden-eat" type="button" hidden>Comer fruto</button>
+          <button id="eden-drink" type="button" hidden>Beber</button>
+          <button id="eden-feed-fish" type="button" hidden>Dar alimento a los peces</button>
+          <button id="eden-wildlife" type="button" hidden></button>
         </div>
+        <details id="eden-exploration">
+          <summary>Ríos de Edén</summary>
+          <p>Sigue el río del jardín hasta sus cuatro ramales: Pisón, Gihón, Hiddekel y Éufrates.</p>
+          <p>Entra al agua para nadar y vuelve a la orilla para salir. Usa E o los botones para interactuar.</p>
+          <button id="eden-effects" type="button" aria-pressed="false">Silenciar efectos</button>
+        </details>
         <details id="eden-animals">
           <summary>Animales</summary>
           <ul id="eden-animal-list"></ul>
@@ -102,8 +112,8 @@
           </form>
         </details>
       </aside>
-      <p class="help desktop-help">WASD o flechas para caminar. Arrastra con el ratón para mirar alrededor.</p>
-      <p class="help touch-help">Usa las flechas para caminar y arrastra sobre el jardín para mirar.</p>
+      <p class="help desktop-help">WASD o flechas para moverte. Arrastra con el ratón para mirar alrededor.</p>
+      <p class="help touch-help">Usa las flechas para moverte y arrastra sobre el jardín para mirar.</p>
       <div id="eden-controls" role="group" aria-label="Controles de movimiento">
         <button type="button" data-direction="up" aria-label="Adelante">↑</button>
         <button type="button" data-direction="left" aria-label="Izquierda">←</button>

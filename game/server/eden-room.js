@@ -1,16 +1,18 @@
 import { VOICE_DISTANCE } from './room.js';
+import { EDEN_BOUNDS, EDEN_RIVERS, EDEN_WATER_Y, EDEN_WILDLIFE, edenRiverShore, isEdenWater } from '../data/eden-rivers.js';
+import { createEdenSwimPhysics } from './eden-swim-physics.js';
 
 /** @typedef {'adam'|'eve'} Character */
-/** @typedef {{character:Character|null,x:number,z:number,dx:number,dz:number,lastInput:number,blocked:boolean,voice:boolean}} Explorer */
-/** @typedef {{id:string,x:number,z:number,feeds:number,name:string|null,rider:string|null}} Animal */
+/** @typedef {{character:Character|null,x:number,y:number,z:number,swimming:boolean,shoreReleased:boolean,dx:number,dz:number,lastInput:number,blocked:boolean,voice:boolean}} Explorer */
+/** @typedef {{id:string,x:number,y:number,z:number,swimming:boolean,alert:boolean,feeds:number,name:string|null,rider:string|null}} Animal */
 /** @typedef {{id:string,x:number,z:number,watered:boolean}} Sprout */
 /** @typedef {{key:string,names:Record<string,string>,saveNames:(names:Record<string,string>)=>void}} World */
+/** @typedef {'splash'|'drink'|'feed-fish'|'pet-sheep'|'call-lion'|'feed-giraffe'} Effect */
+/** @typedef {{type:'eden-effect',effect:Effect,actor:string,target:string,x:number,z:number}} EdenEffect */
 
 /** @type {readonly Character[]} */
 const CHARACTERS = ['adam', 'eve'];
 const WALK_SPEED = 3;
-const X_LIMIT = 11;
-const Z_LIMIT = 8;
 const VISIT_Z = -3;
 const VISIT_RADIUS = 2;
 const INTERACTION_RADIUS = 2;
@@ -24,11 +26,14 @@ function nearVisit(member) {
 
 /** Private exploration room. Character selection and movement are server-authoritative. */
 export class EdenRoom {
-  /** @param {string} code @param {()=>number} [now] @param {World} [world] */
-  constructor(code, now = Date.now, world) {
+  /** @param {string} code @param {()=>number} [now] @param {World} [world] @param {(effect:EdenEffect)=>void} [onEffect] */
+  constructor(code, now = Date.now, world, onEffect = () => {}) {
     this.code = code;
     this.now = now;
     this.world = world;
+    this.onEffect = onEffect;
+    this.physics = createEdenSwimPhysics();
+    this.swimPosition = { x: 0, y: 0, z: 0 };
     /** @type {Map<string,Explorer>} */ this.members = new Map();
     /** @type {Set<Character>} */ this.visited = new Set();
     /** @type {Sprout[]} */ this.sprouts = [
@@ -36,8 +41,8 @@ export class EdenRoom {
       { id: 'sprout-2', x: 5, z: -4, watered: false },
     ];
     /** @type {Animal[]} */ this.animals = [
-      { id: 'donkey-1', x: -6, z: 3, feeds: 0, name: world?.names['donkey-1'] ?? null, rider: null },
-      { id: 'donkey-2', x: 6, z: 3, feeds: 0, name: world?.names['donkey-2'] ?? null, rider: null },
+      { id: 'donkey-1', x: -6, y: 0, z: 3, swimming: false, alert: false, feeds: 0, name: world?.names['donkey-1'] ?? null, rider: null },
+      { id: 'donkey-2', x: 6, y: 0, z: 3, swimming: false, alert: false, feeds: 0, name: world?.names['donkey-2'] ?? null, rider: null },
     ];
     this.fruit = { x: 0, z: 5, readyAt: 0 };
   }
@@ -45,13 +50,15 @@ export class EdenRoom {
   /** @param {string} id */
   join(id) {
     if (this.members.size >= 2) throw new Error('La sala está llena.');
-    this.members.set(id, { character: null, x: 0, z: 0, dx: 0, dz: 0, lastInput: this.now(), blocked: false, voice: false });
+    this.members.set(id, { character: null, x: 0, y: 0, z: 0, swimming: false, shoreReleased: false, dx: 0, dz: 0, lastInput: this.now(), blocked: false, voice: false });
   }
 
   /** @param {string} id */
   leave(id) {
-    if (!this.members.delete(id)) return;
-    for (const animal of this.animals) if (animal.rider === id) animal.rider = null;
+    if (!this.members.has(id)) return;
+    for (const animal of this.animals) if (animal.rider === id) this.releaseMount(animal);
+    this.members.delete(id);
+    this.physics.leave(id);
     for (const member of this.members.values()) member.blocked = false;
   }
 
@@ -77,21 +84,91 @@ export class EdenRoom {
     member.dx = dx / length;
     member.dz = dz / length;
     member.lastInput = this.now();
+    if (dx === 0 && dz === 0) {
+      for (const animal of this.animals) {
+        if (animal.rider === id && animal.alert) member.shoreReleased = true;
+      }
+    }
   }
 
   /** @param {number} delta */
   tick(delta) {
-    const distance = WALK_SPEED * Math.min(0.1, Math.max(0, delta));
+    if (!Number.isFinite(delta)) return;
+    const elapsed = Math.min(0.1, Math.max(0, delta));
+    const distance = WALK_SPEED * elapsed;
     const now = this.now();
-    for (const member of this.members.values()) {
-      if (!member.character || now - member.lastInput > 500) continue;
-      member.x = Math.max(-X_LIMIT, Math.min(X_LIMIT, member.x + member.dx * distance));
-      member.z = Math.max(-Z_LIMIT, Math.min(Z_LIMIT, member.z + member.dz * distance));
+    for (const [id, member] of this.members) {
+      if (!member.character) continue;
+      const active = now - member.lastInput <= 500;
+      const dx = active ? member.dx : 0;
+      const dz = active ? member.dz : 0;
+      if (member.swimming) {
+        this.physics.setInput(id, dx * WALK_SPEED, dz * WALK_SPEED);
+        continue;
+      }
+      const x = Math.max(EDEN_BOUNDS.minX, Math.min(EDEN_BOUNDS.maxX, member.x + dx * distance));
+      const z = Math.max(EDEN_BOUNDS.minZ, Math.min(EDEN_BOUNDS.maxZ, member.z + dz * distance));
+      let mount = null;
+      for (const animal of this.animals) if (animal.rider === id) mount = animal;
+      if (isEdenWater(x, z)) {
+        if (mount && !member.shoreReleased) {
+          mount.alert = true;
+          continue;
+        }
+        member.swimming = true;
+        member.y = EDEN_WATER_Y;
+        this.physics.enter(id, x, z, EDEN_WATER_Y);
+        this.emit('splash', id, id, x, z);
+      }
+      if (mount && (dx !== 0 || dz !== 0)) mount.alert = false;
+      if (dx !== 0 || dz !== 0) member.shoreReleased = false;
+      member.x = x;
+      member.z = z;
+    }
+    this.physics.step(elapsed);
+    for (const [id, member] of this.members) {
+      if (!member.swimming || !this.physics.read(id, this.swimPosition)) continue;
+      this.applySwimPosition(id, member);
     }
     for (const animal of this.animals) {
       const rider = animal.rider && this.members.get(animal.rider);
-      if (rider) { animal.x = rider.x; animal.z = rider.z; }
+      if (rider) {
+        animal.x = rider.x; animal.y = rider.y; animal.z = rider.z;
+        animal.swimming = rider.swimming;
+      } else if (animal.swimming && this.physics.read(animal.id, this.swimPosition)) {
+        this.applySwimPosition(animal.id, animal);
+      }
     }
+  }
+
+  /** @param {string} id @param {{x:number,y:number,z:number,swimming:boolean}} swimmer */
+  applySwimPosition(id, swimmer) {
+    const position = this.swimPosition;
+    const x = Math.max(EDEN_BOUNDS.minX, Math.min(EDEN_BOUNDS.maxX, position.x));
+    const z = Math.max(EDEN_BOUNDS.minZ, Math.min(EDEN_BOUNDS.maxZ, position.z));
+    if (x !== position.x || z !== position.z) this.physics.constrain(id, x, z);
+    swimmer.x = x; swimmer.z = z; swimmer.y = position.y;
+    if (!isEdenWater(x, z)) {
+      swimmer.swimming = false;
+      swimmer.y = 0;
+      this.physics.leave(id);
+    }
+  }
+
+  /** @param {Animal} animal */
+  releaseMount(animal) {
+    animal.rider = null;
+    animal.alert = false;
+    if (animal.swimming) this.physics.enter(animal.id, animal.x, animal.z, EDEN_WATER_Y);
+  }
+
+  /** @param {Effect} effect @param {string} actor @param {string} target @param {number} x @param {number} z */
+  emit(effect, actor, target, x, z) {
+    this.onEffect({ type: 'eden-effect', effect, actor, target, x, z });
+  }
+
+  destroy() {
+    this.physics.destroy();
   }
 
   /** @param {string} id */
@@ -106,6 +183,20 @@ export class EdenRoom {
   interact(id, action, target, name) {
     const member = this.members.get(id);
     if (!member?.character) return 'Elige un personaje antes de interactuar.';
+    if (action === 'drink' || action === 'feed-fish') {
+      const shore = !member.swimming && edenRiverShore(member.x, member.z);
+      if (!shore) return 'Acércate a la orilla para interactuar con el río.';
+      if (action === 'feed-fish' && !EDEN_RIVERS.some((river) => river.id === shore.riverId)) return 'Acércate a la orilla de un ramal para dar alimento a los peces.';
+      this.emit(action, id, shore.riverId, shore.x, shore.z);
+      return null;
+    }
+    if (action === 'pet-sheep' || action === 'call-lion' || action === 'feed-giraffe') {
+      const wildlife = EDEN_WILDLIFE.find((animal) => animal.id === target && animal.action === action);
+      if (!wildlife) return 'Elige un animal válido para esa acción.';
+      if (member.swimming || isEdenWater(member.x, member.z) || Math.hypot(wildlife.x - member.x, wildlife.z - member.z) > INTERACTION_RADIUS) return 'Acércate a ese animal desde tierra.';
+      this.emit(action, id, wildlife.id, wildlife.x, wildlife.z);
+      return null;
+    }
     if (action === 'water') {
       const sprout = this.sprouts.find((item) => item.id === target);
       if (!sprout || Math.hypot(sprout.x - member.x, sprout.z - member.z) > INTERACTION_RADIUS) return 'Acércate a ese brote.';
@@ -137,7 +228,8 @@ export class EdenRoom {
       return null;
     }
     if (action === 'mount' && animal.rider === id) {
-      animal.rider = null;
+      this.releaseMount(animal);
+      member.shoreReleased = false;
       return null;
     }
     if (Math.hypot(animal.x - member.x, animal.z - member.z) > INTERACTION_RADIUS) return 'Acércate a ese animal.';
@@ -149,6 +241,11 @@ export class EdenRoom {
     if (animal.rider || this.animals.some((item) => item.rider === id)) return 'La monta no está disponible.';
     animal.rider = id;
     animal.x = member.x; animal.z = member.z;
+    animal.alert = false;
+    animal.swimming = member.swimming;
+    animal.y = member.y;
+    member.shoreReleased = false;
+    this.physics.leave(animal.id);
     return null;
   }
 
@@ -174,7 +271,7 @@ export class EdenRoom {
   /** @param {string} id */
   snapshot(id) {
     const self = this.members.get(id);
-    const players = Array.from(this.members, ([memberId, { character, x, z, voice }]) => ({ id: memberId, character, x, z, voice }));
+    const players = Array.from(this.members, ([memberId, { character, x, y, z, swimming, voice }]) => ({ id: memberId, character, x, y, z, swimming, voice }));
     const available = CHARACTERS.filter((character) => players.every((player) => player.character !== character));
     return {
       type: /** @type {const} */ ('eden-state'), code: this.code, self: id, available, players,
